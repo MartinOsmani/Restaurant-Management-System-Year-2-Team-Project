@@ -12,7 +12,7 @@ class DatabaseManager:
         self.db_connection.commit()
 
     def create_order(self, order_date, customer_name, table_number, total, user_id):
-         self.db_cursor.execute("INSERT INTO orders (order_date, customer_name, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)", (order_date, customer_name, table_number, total, user_id))
+         self.db_cursor.execute("INSERT INTO orders (order_date, email, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)", (order_date, customer_name, table_number, total, user_id))
          self.db_connection.commit()
 
     def close(self):
