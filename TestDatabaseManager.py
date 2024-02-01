@@ -13,10 +13,12 @@ def db_manager():
     return manager
 
 def test_create_user(db_manager):
-    db_manager.create_user("John Pork", "johnpork", "password123", 1, "johnpork@cia.gov")
+    user_data = ("John Pork", "johnpork", "password123", 1, "johnpork@cia.gov")
+    db_manager.create_user(*user_data)
 
     db_manager.db_cursor.execute("SELECT * FROM users WHERE username = 'johnpork'")
     user = db_manager.db_cursor.fetchone()
+    
 
     assert user is not None
     assert user[1] == "John Pork" 
@@ -26,3 +28,13 @@ def test_create_user(db_manager):
     assert user[5] == "johnpork@cia.gov"
 
     db_manager.db_connection.close()
+
+
+def test_create_duplicate_user(db_manager):
+    user_data = ("John Pork", "johnpork", "password123", 1, "johnpork@cia.gov")
+
+    db_manager.create_user(*user_data)
+
+    with pytest.raises(sqlite3.IntegrityError):
+        db_manager.create_user(*user_data)
+
