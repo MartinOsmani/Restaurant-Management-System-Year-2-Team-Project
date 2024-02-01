@@ -11,6 +11,9 @@ def init_db(db_name='whole.db'):
         with open('Order Items.sql', 'r') as f:
             conn.executescript(f.read())
 
+        with open('Menu Items.sql', 'r') as f:
+            conn.executescript(f.read())
+
 
 if __name__ == '__main__':
     init_db()
