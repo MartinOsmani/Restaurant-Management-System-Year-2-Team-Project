@@ -1,7 +1,7 @@
 import sqlite3
 
-def init_db():
-    with sqlite3.connect('whole.db') as conn:
+def init_db(db_name='whole.db'):
+    with sqlite3.connect(db_name) as conn:
         with open('users.sql', 'r') as f:
             conn.executescript(f.read())
         
