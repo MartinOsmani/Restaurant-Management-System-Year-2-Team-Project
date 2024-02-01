@@ -1,26 +1,28 @@
-from InitDatabase import init_db
-import pytest
 import sqlite3
+import pytest
+from DatabaseManager import DatabaseManager
+from InitDatabase import init_db
 import os
 
-
-def check_table_exists(db_connection, table_name):
-    cursor = db_connection.cursor()
-    cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';")
-    return cursor.fetchone() is not None
-
 @pytest.fixture
-def db_connection():
-    os.system("rm test.db")
-    init_db("test.db")
-    connection = sqlite3.connect("test.db")
-  
-    yield connection
+def db_manager():
+    if os.path.exists("TestDatabaseManager.db"):
+        os.remove("TestDatabaseManager.db")
+    init_db("TestDatabaseManager.db")
+    manager = DatabaseManager("TestDatabaseManager.db")    
+    return manager
 
-    connection.close()
+def test_create_user(db_manager):
+    db_manager.create_user("John Pork", "johnpork", "password123", 1, "johnpork@cia.gov")
 
-def test_tables_exist(db_connection):
-    assert check_table_exists(db_connection, "users"), "The Table users does not exist"
-    assert check_table_exists(db_connection, "orders"), "The Table orders does not exist"
-    assert check_table_exists(db_connection, "order_items"), "The Table order_items does not exist"
+    db_manager.db_cursor.execute("SELECT * FROM users WHERE username = 'johnpork'")
+    user = db_manager.db_cursor.fetchone()
 
+    assert user is not None
+    assert user[1] == "John Pork" 
+    assert user[2] == "johnpork" 
+    assert user[3] == "password123" 
+    assert user[4] == 1  
+    assert user[5] == "johnpork@cia.gov"
+
+    db_manager.db_connection.close()
