@@ -1,7 +1,7 @@
 import sqlite3
 import pytest
-from DatabaseManager import DatabaseManager
-from InitDatabase import init_db
+from flaskr.DatabaseManager import DatabaseManager
+from flaskr.db import init_db
 import os
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def test_create_user(db_manager):
     user_data = ("John Pork", "johnpork", "password123", 1, "johnpork@cia.gov")
     db_manager.create_user(*user_data)
 
-    db_manager.db_cursor.execute("SELECT * FROM users WHERE username = 'johnpork'")
+    db_manager.db_cursor.execute("SELECT * FROM flaskr WHERE username = 'johnpork'")
     user = db_manager.db_cursor.fetchone()
     
 

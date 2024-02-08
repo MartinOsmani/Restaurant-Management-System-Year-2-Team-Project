@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS order_items;
+
+
 CREATE TABLE order_items (
   order_item_id SERIAL PRIMARY KEY,
   order_id INTEGER REFERENCES orders(order_id),

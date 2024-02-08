@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS orders;
+
 CREATE TABLE orders (
   order_id SERIAL PRIMARY KEY,
   order_date TIMESTAMP NOT NULL,
@@ -6,3 +8,4 @@ CREATE TABLE orders (
   total DECIMAL(8,2) NOT NULL,
   user_id INTEGER REFERENCES users(user_id)
 );
+
