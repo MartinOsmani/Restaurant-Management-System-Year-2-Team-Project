@@ -19,7 +19,7 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
-def init_db(db_name='whole.db'):
+def init_db(db_name='database.db'):
     db = get_db()
 
     with current_app.open_resource('users.sql') as f:

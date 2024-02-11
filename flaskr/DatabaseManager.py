@@ -8,12 +8,18 @@ class DatabaseManager:
         self.db_connection = sqlite3.connect(database_name)
         self.db = get_db()
 
-    def create_user(self, full_name, username, password, role_id, email):
-        self.db.execute("INSERT INTO flaskr (name, username, password, role_id, email) VALUES (?, ?, ?, ?, ?)",
-                        (full_name, username, password, role_id, email))
-        self.db.commit()
+    @staticmethod
+    def create_user(full_name, username, password, role_id, email):
+        db = get_db()
+        db.execute("INSERT INTO users (name, username, password, role_id, email) VALUES (?, ?, ?, ?, ?)",
+                       (full_name, username, password, role_id, email))
+        db.commit()
 
-    def create_order(self, order_date, customer_name, table_number, total, user_id):
-        self.db.execute("INSERT INTO orders (order_date, email, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)",
-                        (order_date, customer_name, table_number, total, user_id))
-        self.db.commit()
+    @staticmethod
+    def create_order(order_date, customer_name, table_number, total, user_id):
+        db = get_db()
+        db.execute(
+                "INSERT INTO orders (order_date, customer_name, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)",
+                (order_date, customer_name, table_number, total, user_id))
+        db.commit()
+
