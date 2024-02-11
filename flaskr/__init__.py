@@ -1,5 +1,7 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
+from db import *
+from auth import *
 
 def create_app(test_cofig=None):
     """
@@ -21,9 +23,9 @@ def create_app(test_cofig=None):
     if test_cofig is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
-    else:
+    #else:
         # load the test config if passed in
-        app.config.from_mapping(test_config)
+        #app.config.from_mapping(test_config)
 
     # ensure the instance folder exists
     try:
@@ -36,10 +38,13 @@ def create_app(test_cofig=None):
     def userLogIn():
         return 'Welcome!'
 
-    from . import db
-    db.init_app(app)
+    @app.route('/')
+    def homePage():
+        return render_template('templates/home.html')
 
-    from . import auth
+
+    init_app(app)
+
     app.register_blueprint(auth.bp)
 
     return app
