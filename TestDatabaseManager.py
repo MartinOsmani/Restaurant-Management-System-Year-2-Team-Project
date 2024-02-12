@@ -53,3 +53,27 @@ def test_create_order(db_manager):
     assert order[5] == 1 #user id
 
     db_manager.db_connection.close()
+
+def test_get_all_menu_items(db_manager):
+    menu_items_data = [
+        ("Dish1", "Description1", 10.99, "Ingredient1", 200),
+        ("Dish2", "Description2", 11.99, "Ingredient2", 300),
+        ("Dish3", "Description3", 12.99, "Ingredient3", 400),
+    ]
+
+    for item_data in menu_items_data:
+        db_manager.create_menu_item(*item_data)
+
+    menu_items = db_manager.get_all_menu_items()
+
+    # Checks to see if the retrieved menu items match the expected values
+    assert len(menu_items) == len(menu_items_data)
+
+    for i, menu_item in enumerate(menu_items):
+        assert menu_item[1] == menu_items_data[i][0]
+        assert menu_item[2] == menu_items_data[i][1]
+        assert menu_item[3] == menu_items_data[i][2]
+        assert menu_item[4] == menu_items_data[i][3]
+        assert menu_item[5] == menu_items_data[i][4]
+
+    db_manager.db_connection.close()
