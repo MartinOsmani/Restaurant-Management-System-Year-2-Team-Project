@@ -1,47 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Menu</title>
+  <title>Restaurant Menu</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/css/menu.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      background: #fdf6e3;
+      font-family: 'Times New Roman', serif;
+      margin-top: 20px;
+    }
+    .menu-table {
+      margin: auto;
+      width: 80%;
+    }
+    .menu-table .table {
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .menu-table th, .menu-table td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .menu-table th {
+      background-color: #8d99ae;
+      color: #fff;
+    }
+    .menu-table .item-image img {
+      height: 100px; /* Adjust based on your needs */
+      width: auto;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .menu-table .ingredients {
+      font-size: 0.9em;
+      color: #333;
+    }
+    .menu-table .calories {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="menuTable">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th style="width:300px">
-                    <!-- As detailed in class "center", images in this column are 95s% width of the column -->
-                    Item
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Price
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <img src="../static/images/testFood.jpg" alt="Lorem ipsum dolor sit amet." class="center">
-                </td>
-                <td>
-                    Lorem ipsum dolor sit amet. 
-                </td>
-                <td>
-                    £0.00
-                </td>
-            </tr>
-        </tbody>
+<div class="container">
+  <div class="menu-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th>Ingredients</th>
+          <th>Calories</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-image">
+            <img src="static/images/testFood.jpg" alt="Delicious Food Item">
+          </td>
+          <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+          <td class="ingredients">Tomatoes, Cheese, Basil</td>
+          <td class="calories">250 kcal</td>
+          <td>£12.99</td>
+        </tr>
+      </tbody>
     </table>
-    </div>
-        
+  </div>
+</div>
+
 </body>
 </html>
