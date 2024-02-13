@@ -22,6 +22,14 @@ class DatabaseManager:
                 "INSERT INTO orders (order_date, customer_name, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)",
                 (order_date, customer_name, table_number, total, user_id))
         db.commit()
+    
+    def create_menu_item(self, name, description, price, ingredients, calorie):
+        db = get_db()
+        db.execute(
+            "INSERT INTO menu_items (name, description, price, ingredients, calorie) VALUES (?, ?, ?, ?, ?)",
+            (name, description, price, ingredients, calorie)
+        )
+        db.commit()
 
     def get_all_menu_items(self):
         self.db_cursor.execute("SELECT * FROM menu_items")
