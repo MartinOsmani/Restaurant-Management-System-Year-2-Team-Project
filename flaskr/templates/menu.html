@@ -60,15 +60,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="item-image">
-            <img src="static/images/testFood.jpg" alt="Delicious Food Item">
-          </td>
-          <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-          <td class="ingredients">Tomatoes, Cheese, Basil</td>
-          <td class="calories">250 kcal</td>
-          <td>£12.99</td>
-        </tr>
+        {% for item in menu_items %}
+          <tr>
+            <td class="item-image">
+              <img src="{{ item.menu_item_image_url }}" alt="{{ item.menu_item_name }}" class="item-thumbnail">
+              <span class="item-name">{{ item.menu_item_name }}</span>
+            </td>
+            <td>{{ item.menu_item_description }}</td>
+            <td class="ingredients">{{ item.menu_item_ingredients }}</td>
+            <td class="calories">{{ item.menu_item_calorie }}</td>
+            <td>{{ item.menu_item_price }}</td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
