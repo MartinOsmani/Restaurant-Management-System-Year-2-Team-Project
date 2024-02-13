@@ -54,6 +54,23 @@ def test_create_order(db_manager):
 
     db_manager.db_connection.close()
 
+def test_create_menu_item(db_manager):
+    menu_item_data = ("Dish1", "Description1", 10.99, "Ingredient1", 200)
+    
+    db_manager.create_menu_item(*menu_item_data)
+    
+    db_manager.db_cursor.execute("SELECT * FROM menu_items WHERE name = 'Dish1'")
+    created_menu_item = db_manager.db_cursor.fetchone()
+
+    assert created_menu_item is not None
+    assert created_menu_item[1] == "Dish1"
+    assert created_menu_item[2] == "Description1"
+    assert created_menu_item[3] == 10.99
+    assert created_menu_item[4] == "Ingredient1"
+    assert created_menu_item[5] == 500
+
+    db_manager.db_connection.close()
+
 def test_get_all_menu_items(db_manager):
     menu_items_data = [
         ("Dish1", "Description1", 10.99, "Ingredient1", 200),
