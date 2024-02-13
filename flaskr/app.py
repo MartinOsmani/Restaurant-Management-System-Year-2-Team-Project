@@ -16,8 +16,6 @@ with app.app_context():
 # Register the auth blueprint
 app.register_blueprint(auth_bp)
 
-
-
 @app.route('/')
 def index():
     return render_template('home.html')
