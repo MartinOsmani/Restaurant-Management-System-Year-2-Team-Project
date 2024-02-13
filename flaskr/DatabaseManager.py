@@ -23,11 +23,11 @@ class DatabaseManager:
                 (order_date, customer_name, table_number, total, user_id))
         db.commit()
     
-    def create_menu_item(self, name, description, price, ingredients, calorie):
+    def create_menu_item(self, name, description, price, ingredients, calorie, image_url):
         db = get_db()
         db.execute(
-            "INSERT INTO menu_items (name, description, price, ingredients, calorie) VALUES (?, ?, ?, ?, ?)",
-            (name, description, price, ingredients, calorie)
+            "INSERT INTO menu_items (menu_item_name, menu_item_description, menu_item_price, menu_item_ingredients, menu_item_calorie, menu_item_image_url) VALUES (?, ?, ?, ?, ?, ?)",
+            (name, description, price, ingredients, calorie, image_url)
         )
         db.commit()
 
