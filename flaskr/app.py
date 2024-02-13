@@ -1,12 +1,14 @@
 from flask import Flask, render_template
 from flaskr.auth import bp as auth_bp
 from flaskr.db import init_db
+from flaskr.DatabaseManager import DatabaseManager
 import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['DATABASE'] = 'database.db'
 
+db_manager = DatabaseManager()
 
 with app.app_context():
     init_db()
@@ -22,7 +24,8 @@ def index():
 
 @app.route('/menu')
 def menu():
-    return render_template('menu.html')
+    menu_items = db_manager.get_all_menu_items()
+    return render_template('menu.html', menu_items=menu_items)
 
 @app.route('/book')
 def book():

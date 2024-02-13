@@ -1,12 +1,29 @@
 import sqlite3
-
+from flask import g, current_app
 from flaskr.db import get_db
 
 
 class DatabaseManager:
     def __init__(self, database_name=":memory:"):
         self.db_connection = sqlite3.connect(database_name)
-        self.db = get_db()
+        self.db = None
+
+    def get_db(self):
+        if 'db' not in g:
+            app_context = current_app.app_context()
+            app_context.push()
+            self.db = sqlite3.connect(
+                self.database_name,
+                detect_types=sqlite3.PARSE_DECLTYPES
+            )
+            self.db.row_factory = sqlite3.Row
+
+        return self.db
+    
+    def close_db(self):
+        if self.db is not None:
+            self.db.close()
+            g.pop('db', None)
 
     @staticmethod
     def create_user(full_name, username, password, role_id, email):
@@ -32,8 +49,10 @@ class DatabaseManager:
         db.commit()
 
     def get_all_menu_items(self):
-        self.db_cursor.execute("SELECT * FROM menu_items")
-        menu_items = self.db_cursor.fetchall()
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM menu_items")
+        menu_items = cursor.fetchall()
         return menu_items
     
 
