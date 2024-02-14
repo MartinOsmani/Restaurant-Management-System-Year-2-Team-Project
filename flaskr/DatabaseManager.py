@@ -40,11 +40,11 @@ class DatabaseManager:
                 (order_date, customer_name, table_number, total, user_id))
         db.commit()
     
-    def create_menu_item(self, name, description, price, ingredients, calorie, image_url):
+    def create_menu_item(self, name, description, price, ingredients, calorie, image_url, category):
         db = get_db()
         db.execute(
-            "INSERT INTO menu_items (menu_item_name, menu_item_description, menu_item_price, menu_item_ingredients, menu_item_calorie, menu_item_image_url) VALUES (?, ?, ?, ?, ?, ?)",
-            (name, description, price, ingredients, calorie, image_url)
+            "INSERT INTO menu_items (menu_item_name, menu_item_description, menu_item_price, menu_item_ingredients, menu_item_calorie, menu_item_image_url, menu_item_category) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (name, description, price, ingredients, calorie, image_url, category)
         )
         db.commit()
 
@@ -56,7 +56,7 @@ class DatabaseManager:
         return menu_items
     
     def insert_test_data_for_menu(self):
-        self.create_menu_item("Cheesy Fries", "Fries with cheese melted on top.", 6.99, "Potatoes, Mozeralla Cheese", 500, "static/images/testFood.jpg")
-        self.create_menu_item("Curly Fries", "Potatoes sliced with a curly fry clutter.", 5.99, "Potatoes", 400, "static/images/testFood.jpg")
-        self.create_menu_item("Standard Cut Fries", "Potatoes evenly cut medium-thin.", 3.99, "Potatoes", 200, "static/images/testFood.jpg")
+        self.create_menu_item("Cheesy Fries", "Fries with cheese melted on top.", 6.99, "Potatoes, Mozeralla Cheese", 500, "static/images/testFood.jpg", "starter")
+        self.create_menu_item("Curly Fries", "Potatoes sliced with a curly fry clutter.", 5.99, "Potatoes", 400, "static/images/testFood.jpg", "main")
+        self.create_menu_item("Standard Cut Fries", "Potatoes evenly cut medium-thin.", 3.99, "Potatoes", 200, "static/images/testFood.jpg", "drink")
 
