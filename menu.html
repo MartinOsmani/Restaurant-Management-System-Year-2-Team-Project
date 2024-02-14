@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="menu.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claro Menu</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
 </head>
 <body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Claro</h1>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="#" class="nav-link active">Menu</a>
+                <a href="#" class="nav-link">About Us</a>
+                <a href="#" class="nav-link">Contact</a>
+            </nav>
+        </div>
+    </header>
 
-    <div class="menuTable">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th style="width:300px">
-                    <!-- As detailed in class "center", images in this column are 95s% width of the column -->
-                    Item
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Price
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <img src="testFood.jpg" alt="Lorem ipsum dolor sit amet." class="center">
-                </td>
-                <td>
-                    Lorem ipsum dolor sit amet. 
-                </td>
-                <td>
-                    £0.00
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    </div>
-        
+    <section class="menu">
+        <div class="container">
+            <h2 class="section-heading">Our Menu</h2>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <h3 class="item-name">Tacos</h3>
+                    <p class="item-description">Authentic Mexican tacos served with your choice of meat, topped with cilantro and onions.</p>
+                    <span class="item-price">£9.99</span>
+                </div>
+                <div class="menu-item">
+                    <h3 class="item-name">Paella</h3>
+                    <p class="item-description">Classic Spanish paella with saffron-infused rice, mixed seafood, and chorizo.</p>
+                    <span class="item-price">£14.99</span>
+                </div>
+                <!-- More menu items eventually-->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Claro Hispanic Restaurant. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

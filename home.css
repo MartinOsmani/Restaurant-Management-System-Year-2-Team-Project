@@ -8,7 +8,7 @@
 /* Body styles */
 body {
     font-family: 'Montserrat', sans-serif;
-    background-color: #f8f8f8;
+    background-color: #8b5858;
 }
 
 /* Header styles */
@@ -65,7 +65,7 @@ body {
 .btn {
     display: inline-block;
     padding: 15px 30px;
-    background-color: #fff;
+    background-color: #266136;
     color: #ff6600;
     font-size: 18px;
     text-decoration: none;
@@ -84,3 +84,12 @@ body {
     text-align: center;
     padding: 20px 0;
 }
+.order-btn {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.order-btn:hover {
+    background-color: #cc5500;
+}
+
