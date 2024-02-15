@@ -33,11 +33,11 @@ class DatabaseManager:
         db.commit()
 
     @staticmethod
-    def create_order(order_date, customer_name, table_number, total, user_id):
+    def create_order(order_date, email, table_number, total, user_id):
         db = get_db()
         db.execute(
-                "INSERT INTO orders (order_date, customer_name, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)",
-                (order_date, customer_name, table_number, total, user_id))
+                "INSERT INTO orders (order_date, email, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)",
+                (order_date, email, table_number, total, user_id))
         db.commit()
     
     def create_menu_item(self, name, description, price, ingredients, calorie, image_url, category):
