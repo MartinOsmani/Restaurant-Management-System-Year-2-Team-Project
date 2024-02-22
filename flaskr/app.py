@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from flaskr.auth import bp as auth_bp
+from flask import Flask, render_template, session, redirect, url_for
+from flaskr.auth import bp as auth_bp, login_required
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
 import os
@@ -18,8 +18,20 @@ with app.app_context():
 app.register_blueprint(auth_bp)
 
 @app.route('/')
+@login_required
 def index():
-    return render_template('home.html')
+    user_id = session.get('user_id')
+
+    role_id = DatabaseManager.get_role_id(user_id)
+    template_mapping = {
+        1: 'home.html',
+        2: 'waiter.html',
+        3: 'kitchen_staff.html',
+        4: 'manager.html'
+    }
+    template = template_mapping.get(role_id, 'home.html')
+
+    return render_template(template)
 
 @app.route('/menu')
 def menu():

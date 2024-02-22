@@ -27,10 +27,10 @@ class DatabaseManager:
 
     @staticmethod
     def create_user(full_name, username, password, role_id, email):
-        db = get_db()
-        db.execute("INSERT INTO users (name, username, password, role_id, email) VALUES (?, ?, ?, ?, ?)",
+        with get_db() as db:
+            db.execute("INSERT INTO users (name, username, password, role_id, email) VALUES (?, ?, ?, ?, ?)",
                        (full_name, username, password, role_id, email))
-        db.commit()
+            db.commit()
 
     @staticmethod
     def create_order(order_date, email, table_number, total, user_id):
@@ -54,7 +54,17 @@ class DatabaseManager:
         cursor.execute("SELECT * FROM menu_items")
         menu_items = cursor.fetchall()
         return menu_items
-    
+
+    @staticmethod
+    def get_role_id(user_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT role_id FROM users where user_id = ?", (user_id,))
+        role_id = cursor.fetchone()
+        if role_id is None:
+            return 1;
+        return role_id[0]
+
     def insert_test_data_for_menu(self):
         self.create_menu_item("Cheesy Fries", "Fries with cheese melted on top.", 6.99, "Potatoes, Mozeralla Cheese", 500, "static/images/testFood.jpg", "starter")
         self.create_menu_item("Curly Fries", "Potatoes sliced with a curly fry clutter.", 5.99, "Potatoes", 400, "static/images/testFood.jpg", "main")
