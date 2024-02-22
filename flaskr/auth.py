@@ -3,13 +3,16 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask_bcrypt import Bcrypt
 
 from flaskr.db import get_db
 
 from flaskr.DatabaseManager import DatabaseManager
 
+from flask_bcrypt import bcrypt
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+bcrypt = Bcrypt()
 
 
 @bp.route('/register', methods=('GET', 'POST'))
@@ -37,7 +40,8 @@ def register():
 
         if error is None:
             try:
-                DatabaseManager.create_user(name, username, password, role_id, email)
+                hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                DatabaseManager.create_user(name, username, hashed_password, role_id, email)
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
