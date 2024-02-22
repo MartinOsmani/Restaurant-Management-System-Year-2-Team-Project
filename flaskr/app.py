@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, url_for
-from flaskr.auth import bp as auth_bp
+from flaskr.auth import bp as auth_bp, login_required
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
 import os
@@ -18,10 +18,9 @@ with app.app_context():
 app.register_blueprint(auth_bp)
 
 @app.route('/')
+@login_required
 def index():
     user_id = session.get('user_id')
-    if user_id is None:
-        return redirect(url_for('auth_register'))
 
     role_id = DatabaseManager.get_role_id(user_id)
     template_mapping = {
