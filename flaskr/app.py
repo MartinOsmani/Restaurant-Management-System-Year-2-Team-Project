@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session, redirect
 from flaskr.auth import bp as auth_bp
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
@@ -19,7 +19,17 @@ app.register_blueprint(auth_bp)
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    user_id = session.get('user_id')
+    if user_id is None:
+        return redirect('/auth/register')
+    if DatabaseManager.get_role_id(user_id) == 2:
+        return render_template('waiter.html')
+    elif DatabaseManager.get_role_id(user_id) == 3:
+        return render_template('kitchen_staff.html')
+    elif DatabaseManager.get_role_id(user_id) == 4:
+        return render_template('manager.html')
+    elif DatabaseManager.get_role_id(user_id) == 1:
+        return render_template('home.html')
 
 @app.route('/menu')
 def menu():
