@@ -70,3 +70,14 @@ class DatabaseManager:
         self.create_menu_item("Curly Fries", "Potatoes sliced with a curly fry clutter.", 5.99, "Potatoes", 400, "static/images/testFood.jpg", "main")
         self.create_menu_item("Standard Cut Fries", "Potatoes evenly cut medium-thin.", 3.99, "Potatoes", 200, "static/images/testFood.jpg", "drink")
 
+    def update_menu_item(self, menu_item_id, name, description, price, ingredients, calorie, image_url, category):
+        db = get_db()
+        db.execute(
+            "UPDATE menu_items SET menu_item_name = ?, menu_item_description = ?, menu_item_price = ?, "
+            "menu_item_ingredients = ?, menu_item_calorie = ?, menu_item_image_url = ?, menu_item_category = ? "
+            "WHERE menu_item_id = ?",
+            (name, description, price, ingredients, calorie, image_url, category, menu_item_id)
+        )
+        db.commit()
+
+   
