@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Menu Item</title>
+</head>
+<body>
+    <div class="content">
+        <h1>Update Menu Item</h1>
+        <form method="POST" action="/update-menu" id="update_menu_form">
+            <label for="menu_item">Select Menu Item:</label>
+            <select name="menu_item" id="menu_item">
+                {% for item in menu_items %}
+                    <option value="{{ item.menu_item_id }}">{{ item.menu_item_name }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name"><br>
+            
+            <label for="description">Description:</label>
+            <textarea name="description" id="description"></textarea><br>
+            
+            <label for="price">Price:</label>
+            <input type="number" name="price" id="price" step="0.01"><br>
+            
+            <label for="ingredients">Ingredients:</label>
+            <textarea name="ingredients" id="ingredients"></textarea><br>
+            
+            <label for="calorie">Calorie:</label>
+            <input type="number" name="calorie" id="calorie"><br>
+            
+            <label for="image_url">Image URL:</label>
+            <input type="text" name="image_url" id="image_url"><br>
+            
+            <label for="category">Category:</label>
+            <input type="text" name="category" id="category"><br>
+
+            <br>
+            <button type="submit">Update Menu Item</button>
+        </form>
+    </div>
+</body>
+</html>
