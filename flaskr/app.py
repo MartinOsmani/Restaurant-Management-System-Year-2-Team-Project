@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, request
 from flaskr.auth import bp as auth_bp, login_required
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
@@ -37,6 +37,27 @@ def index():
 def menu():
     menu_items = db_manager.get_all_menu_items()
     return render_template('menu.html', menu_items=menu_items)
+
+@app.route('/update-menu', methods=['GET', 'POST'])
+@login_required
+def update_menu():
+    menu_items = db_manager.get_all_menu_items()
+    if request.method == 'POST':
+        selected_menu_item_id = request.form.get('menu_item')
+        new_name = request.form.get('name')
+        new_description = request.form.get('description')
+        new_price = request.form.get('price')
+        new_ingredients = request.form.get('ingredients')
+        new_calorie = request.form.get('calorie')
+        new_image_url = request.form.get('image_url')
+        new_category = request.form.get('category')
+
+        db_manager.update_menu_item(selected_menu_item_id, new_name, new_description, new_price, new_ingredients, new_calorie, new_image_url, new_category)
+
+        menu_items = db_manager.get_all_menu_items()
+        return render_template('menu.html', menu_items=menu_items)
+    
+    return render_template('update_menu.html', menu_items=menu_items)
 
 @app.route('/book')
 def book():
