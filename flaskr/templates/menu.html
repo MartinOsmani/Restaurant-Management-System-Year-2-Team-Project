@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Claro Menu</title>
-      <link rel="stylesheet" href="home.css">
+      <link rel="stylesheet" href="/static/css/home.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -278,7 +278,7 @@
         orderData.push({name: itemName, quantity: quantity, price: itemPrice});
     }
 
-    fetch('/checkout', {
+    fetch('/createOrder', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -287,8 +287,7 @@
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
-        alert(data.message);
+        window.location.href = '/order_confirmation';
     })
     .catch((error) => {
         console.error('Error:', error);
