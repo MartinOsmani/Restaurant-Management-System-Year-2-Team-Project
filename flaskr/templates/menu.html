@@ -268,8 +268,34 @@
 
 
          function checkoutOrder() {
-            alert("Checkout functionality not implemented.");
-        }
+    var items = document.getElementById("orderItems").getElementsByTagName("li");
+    var orderData = [];
+    for (var i = 0; i < items.length; i++) {
+        var itemDetails = items[i].getElementsByTagName("div")[0];
+        var itemName = itemDetails.childNodes[0].textContent.trim();
+        var quantity = parseInt(itemDetails.childNodes[1].textContent.replace('x', ''), 10);
+        var itemPrice = items[i].getAttribute("data-price");
+        orderData.push({name: itemName, quantity: quantity, price: itemPrice});
+    }
+
+    fetch('/checkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert(data.message);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred while processing your order.');
+    });
+}
+
          filterByCategory();
       </script>
    </body>

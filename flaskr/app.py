@@ -1,5 +1,6 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, request, jsonify
 from flaskr.auth import bp as auth_bp, login_required
+
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
 import os
@@ -37,6 +38,12 @@ def index():
 def menu():
     menu_items = db_manager.get_all_menu_items()
     return render_template('menu.html', menu_items=menu_items)
+
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    data = request.get_json()
+    return jsonify({"status": "success", "message": "Order processed successfully."})
+
 
 @app.route('/book')
 def book():
