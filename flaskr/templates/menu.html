@@ -1,147 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claro Menu</title>
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <style>
-        body {
-            background: #fdf6e3;
-            font-family: 'Montserrat', sans-serif;
-            margin-top: 20px;
-        }
-        .menu-table {
-            margin: auto;
-            width: 80%;
-        }
-        .menu-table .table {
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .menu-table th, .menu-table td {
-            text-align: center;
-            vertical-align: middle;
-        }
-        .menu-table th {
-            background-color: #8d99ae;
-            color: #fff;
-        }
-        .menu-table .item-image img {
-            height: 100px;
-            width: auto;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .menu-table .ingredients {
-            font-size: 0.9em;
-            color: #333;
-        }
-        .menu-table .calories {
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-
-    <section class="menu">
-    <div class="container">
-        <h2 class="section-heading">Our Menu</h2>
-        <div>
-            <select id="sortSelect" onchange="sortMenu()">
-                <option value="price-low-high">Price: Low to High</option>
-                <option value="price-high-low">Price: High to Low</option>
-                <option value="calorie-low-high">Calories: Low to High</option>
-                <option value="calorie-high-low">Calories: High to Low</option>
-            </select>
-            <select id="filterCategory" onchange="filterByCategory()">
-                <option value="all">All</option>
-                <option value="main">Main Dish</option>
-                <option value="starter">Starter Dish</option>
-                <option value="drink">Drinks</option>
-            </select>
-        </div>
-        <div class="menu-table">
-            <table class="table">
-                <thead>
-                    <tr>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Claro Menu</title>
+      <link rel="stylesheet" href="home.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      <style>
+         body {
+         background: #fdf6e3;
+         font-family: 'Montserrat', sans-serif;
+         margin-top: 20px;
+         }
+         .menu-table {
+         margin: auto;
+         width: 80%;
+         }
+         .menu-table .table {
+         background-color: #fff;
+         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+         }
+         .menu-table th, .menu-table td {
+         text-align: center;
+         vertical-align: middle;
+         }
+         .menu-table th {
+         background-color: #8d99ae;
+         color: #fff;
+         }
+         .menu-table .item-image img {
+         height: 100px;
+         width: auto;
+         border-radius: 5px;
+         margin-top: 10px;
+         }
+         .menu-table .ingredients {
+         font-size: 0.9em;
+         color: #333;
+         }
+         .menu-table .calories {
+         font-weight: bold;
+         color: #333;
+         }
+         .order-panel {
+         position: fixed;
+         right: 0;
+         top: 0;
+         width: 0;
+         height: 100%;
+         background-color: white;
+         overflow-x: hidden;
+         transition: 0.5s;
+         padding-top: 60px;
+         box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+         }
+         .order-panel .close-btn {
+         position: absolute;
+         top: 0;
+         right: 25px;
+         font-size: 36px;
+         margin-left: 50px;
+         cursor: pointer;
+         }
+         .order-items {
+         list-style: none;
+         padding: 0;
+         }
+         .order-items li {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         padding: 10px;
+         border-bottom: 1px solid #ddd;
+         }
+         .show-order-btn {
+         position: fixed;
+         right: 20px;
+         top: 20px;
+         z-index: 100;
+         padding: 10px 20px;
+         background-color: #3498db;
+         color: white;
+         border: none;
+         cursor: pointer;
+         border-radius: 5px;
+         }
+      </style>
+   </head>
+   <body>
+      <button onclick="toggleOrderPanel()" class="show-order-btn">Show Order</button>
+      <section class="menu">
+         <div class="container">
+            <h2 class="section-heading">Our Menu</h2>
+            <div>
+               <select id="sortSelect" onchange="sortMenu()">
+                  <option value="price-low-high">Price: Low to High</option>
+                  <option value="price-high-low">Price: High to Low</option>
+                  <option value="calorie-low-high">Calories: Low to High</option>
+                  <option value="calorie-high-low">Calories: High to Low</option>
+               </select>
+               <select id="filterCategory" onchange="filterByCategory()">
+                  <option value="all">All</option>
+                  <option value="main">Main Dish</option>
+                  <option value="starter">Starter Dish</option>
+                  <option value="drink">Drinks</option>
+               </select>
+            </div>
+            <div class="menu-table">
+               <table class="table">
+                  <thead>
+                     <tr>
                         <th>Item</th>
                         <th>Description</th>
                         <th>Ingredients</th>
                         <th>Calories</th>
                         <th>Price</th>
                         <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="menuItems">
-                    {% for item in menu_items %}
-                    <tr category="{{ item.menu_item_category }}">
+                     </tr>
+                  </thead>
+                  <tbody id="menuItems">
+                     {% for item in menu_items %}
+                     <tr category="{{ item.menu_item_category }}">
                         <td class="item-image">
-                            <img src="{{ item.menu_item_image_url }}" alt="{{ item.menu_item_name }}" class="item-thumbnail">
-                            <span class="item-name">{{ item.menu_item_name }}</span>
+                           <img src="{{ item.menu_item_image_url }}" alt="{{ item.menu_item_name }}" class="item-thumbnail">
+                           <span class="item-name">{{ item.menu_item_name }}</span>
                         </td>
                         <td>{{ item.menu_item_description }}</td>
                         <td class="ingredients">{{ item.menu_item_ingredients }}</td>
                         <td class="calories">{{ item.menu_item_calorie }}</td>
-                        <td>{{ item.menu_item_price }}</td>
-                        <td><button onclick="addToOrder('{{ item.menu_item_name }}')">Add to Order</button></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
-    <footer class="footer">
-        <div class="container">
+                        <td class="price">{{ item.menu_item_price }}</td>
+                        <td><button onclick="addToOrder('{{ item.menu_item_name }}', '{{ item.menu_item_price }}')">Add to Order</button></td>
+                     </tr>
+                     {% endfor %}
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </section>
+      <div class="order-panel" id="orderPanel">
+         <h2>Your Order</h2>
+         <ul class="order-items" id="orderItems">
+         </ul>
+          <div id="totalPrice">Total Price: $0</div>
+        <button onclick="checkoutOrder()">Checkout Order</button>
+      </div>
+      <footer class="footer">
+         <div class="container">
             <p>&copy; 2024 Claro Hispanic Restaurant. All rights reserved.</p>
-        </div>
-    </footer>
-    <script>
-        function sortMenu() {
-            const sortValue = document.getElementById('sortSelect').value;
-            let rows = Array.from(document.getElementById('menuItems').rows);
+         </div>
+      </footer>
+      <script>
+         function sortMenu() {
+             const sortValue = document.getElementById('sortSelect').value;
+             let rows = Array.from(document.getElementById('menuItems').rows);
 
-            switch(sortValue) {
-                case 'price-low-high':
-                    rows.sort((a, b) => parseFloat(a.cells[4].textContent) - parseFloat(b.cells[4].textContent));
-                    break;
-                case 'price-high-low':
-                    rows.sort((a, b) => parseFloat(b.cells[4].textContent) - parseFloat(a.cells[4].textContent));
-                    break;
-                case 'calorie-low-high':
-                    rows.sort((a, b) => parseFloat(a.cells[3].textContent) - parseFloat(b.cells[3].textContent));
-                    break;
-                case 'calorie-high-low':
-                    rows.sort((a, b) => parseFloat(b.cells[3].textContent) - parseFloat(a.cells[3].textContent));
-                    break;
+             switch(sortValue) {
+                 case 'price-low-high':
+                     rows.sort((a, b) => parseFloat(a.cells[4].textContent) - parseFloat(b.cells[4].textContent));
+                     break;
+                 case 'price-high-low':
+                     rows.sort((a, b) => parseFloat(b.cells[4].textContent) - parseFloat(a.cells[4].textContent));
+                     break;
+                 case 'calorie-low-high':
+                     rows.sort((a, b) => parseFloat(a.cells[3].textContent) - parseFloat(b.cells[3].textContent));
+                     break;
+                 case 'calorie-high-low':
+                     rows.sort((a, b) => parseFloat(b.cells[3].textContent) - parseFloat(a.cells[3].textContent));
+                     break;
+             }
+
+             const tbody = document.getElementById('menuItems');
+             tbody.innerHTML = '';
+             rows.forEach(row => tbody.appendChild(row));
+         }
+
+
+         function filterByCategory() {
+             const category = document.getElementById('filterCategory').value;
+             const rows = document.getElementById('menuItems').rows;
+
+             for (let i = 0; i < rows.length; i++) {
+                 if (category === 'all' || rows[i].getAttribute('category') === category) {
+                     rows[i].style.display = '';
+                 } else {
+                     rows[i].style.display = 'none';
+                 }
+             }
+         }
+
+         var isOrderPanelOpen = false;
+
+         function toggleOrderPanel() {
+            var panel = document.getElementById("orderPanel");
+            var button = document.querySelector(".show-order-btn");
+            if (isOrderPanelOpen) {
+                panel.style.width = "0";
+                button.textContent = "Show Order";
+            } else {
+                 panel.style.width = "250px";
+                 button.textContent = "Hide Order";
             }
+            isOrderPanelOpen = !isOrderPanelOpen;
+         }
+         function updateTotalPrice() {
+    var items = document.getElementById("orderItems").getElementsByTagName("li");
+    var totalPrice = 0;
+    for (var i = 0; i < items.length; i++) {
+        var itemPrice = parseFloat(items[i].getAttribute("data-price"));
+        var quantity = parseInt(items[i].getElementsByTagName("div")[0].childNodes[1].textContent.replace('x', ''), 10);
+        totalPrice += itemPrice * quantity;
+    }
+    document.getElementById("totalPrice").textContent = `Total Price: $${totalPrice.toFixed(2)}`;
+}
+         function addToOrder(itemName, itemPrice) {
+    var ul = document.getElementById("orderItems");
+    var items = ul.getElementsByTagName("li");
+    var itemFound = false;
 
-            const tbody = document.getElementById('menuItems');
-            tbody.innerHTML = '';
-            rows.forEach(row => tbody.appendChild(row));
+    for (var i = 0; i < items.length; i++) {
+        var itemDetails = items[i].getElementsByTagName("div")[0];
+        var namePart = itemDetails.childNodes[0].textContent.trim();
+        var quantity = parseInt(itemDetails.childNodes[1].textContent.replace('x', ''), 10);
+
+        if (namePart === itemName) {
+            quantity += 1;
+            itemDetails.childNodes[1].textContent = `${quantity}x`;
+            itemFound = true;
+            break;
         }
+    }
 
-        function filterByCategory() {
-            const category = document.getElementById('filterCategory').value;
-            const rows = document.getElementById('menuItems').rows;
+    if (!itemFound) {
+        var li = document.createElement("li");
+        var textSpan = document.createElement("span");
+        textSpan.textContent = itemName + " ";
+        var quantitySpan = document.createElement("span");
+        quantitySpan.textContent = "1x";
 
-            for (let i = 0; i < rows.length; i++) {
-                if (category === 'all' || rows[i].getAttribute('category') === category) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
-            }
+        var nameQuantityContainer = document.createElement("div");
+        nameQuantityContainer.appendChild(textSpan);
+        nameQuantityContainer.appendChild(quantitySpan);
+
+        var removeBtn = document.createElement("button");
+        removeBtn.textContent = "Remove";
+        removeBtn.onclick = function() { removeItem(this.parentNode); };
+        removeBtn.style.marginLeft = "auto";
+
+        li.appendChild(nameQuantityContainer);
+        li.appendChild(removeBtn);
+        ul.appendChild(li);
+
+        li.setAttribute("data-price", itemPrice.toString());
+    }
+
+    updateTotalPrice();
+}
+
+
+
+         function removeItem(itemElement) {
+            itemElement.remove();
+            updateTotalPrice();
+         }
+
+
+         function checkoutOrder() {
+            alert("Checkout functionality not implemented.");
         }
-
-        filterByCategory();
-    </script>
-</body>
+         filterByCategory();
+      </script>
+   </body>
 </html>
