@@ -50,51 +50,53 @@
 <body>
 
     <section class="menu">
-        <div class="container">
-            <h2 class="section-heading">Our Menu</h2>
-            <div>
-                <select id="sortSelect" onchange="sortMenu()">
-                    <option value="price-low-high">Price: Low to High</option>
-                    <option value="price-high-low">Price: High to Low</option>
-                    <option value="calorie-low-high">Calories: Low to High</option>
-                    <option value="calorie-high-low">Calories: High to Low</option>
-                </select>
-                <select id="filterCategory" onchange="filterByCategory()">
-                    <option value="all">All</option>
-                    <option value="main">Main Dish</option>
-                    <option value="starter">Starter Dish</option>
-                    <option value="drink">Drinks</option>
-                </select>
-            </div>
-            <div class="menu-table">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Description</th>
-                            <th>Ingredients</th>
-                            <th>Calories</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="menuItems">
-                        {% for item in menu_items %}
-                        <tr category="{{ item.menu_item_category }}">
-                            <td class="item-image">
-                                <img src="{{ item.menu_item_image_url }}" alt="{{ item.menu_item_name }}" class="item-thumbnail">
-                                <span class="item-name">{{ item.menu_item_name }}</span>
-                            </td>
-                            <td>{{ item.menu_item_description }}</td>
-                            <td class="ingredients">{{ item.menu_item_ingredients }}</td>
-                            <td class="calories">{{ item.menu_item_calorie }}</td>
-                            <td>{{ item.menu_item_price }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <div class="container">
+        <h2 class="section-heading">Our Menu</h2>
+        <div>
+            <select id="sortSelect" onchange="sortMenu()">
+                <option value="price-low-high">Price: Low to High</option>
+                <option value="price-high-low">Price: High to Low</option>
+                <option value="calorie-low-high">Calories: Low to High</option>
+                <option value="calorie-high-low">Calories: High to Low</option>
+            </select>
+            <select id="filterCategory" onchange="filterByCategory()">
+                <option value="all">All</option>
+                <option value="main">Main Dish</option>
+                <option value="starter">Starter Dish</option>
+                <option value="drink">Drinks</option>
+            </select>
         </div>
-    </section>
+        <div class="menu-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Description</th>
+                        <th>Ingredients</th>
+                        <th>Calories</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="menuItems">
+                    {% for item in menu_items %}
+                    <tr category="{{ item.menu_item_category }}">
+                        <td class="item-image">
+                            <img src="{{ item.menu_item_image_url }}" alt="{{ item.menu_item_name }}" class="item-thumbnail">
+                            <span class="item-name">{{ item.menu_item_name }}</span>
+                        </td>
+                        <td>{{ item.menu_item_description }}</td>
+                        <td class="ingredients">{{ item.menu_item_ingredients }}</td>
+                        <td class="calories">{{ item.menu_item_calorie }}</td>
+                        <td>{{ item.menu_item_price }}</td>
+                        <td><button onclick="addToOrder('{{ item.menu_item_name }}')">Add to Order</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
     <footer class="footer">
         <div class="container">
