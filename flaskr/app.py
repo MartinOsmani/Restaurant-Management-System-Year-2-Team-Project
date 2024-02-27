@@ -2,11 +2,13 @@ from flask import Flask, render_template, session, redirect, url_for, request
 from flaskr.auth import bp as auth_bp, login_required
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
+from werkzeug.utils import secure_filename  # Add this import
 import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['DATABASE'] = 'database.db'
+app.config['UPLOAD_FOLDER'] = 'static/images'
 
 db_manager = DatabaseManager()
 
@@ -49,14 +51,23 @@ def update_menu():
         new_price = request.form.get('price')
         new_ingredients = request.form.get('ingredients')
         new_calorie = request.form.get('calorie')
-        new_image_url = request.form.get('image_url')
         new_category = request.form.get('category')
 
-        db_manager.update_menu_item(selected_menu_item_id, new_name, new_description, new_price, new_ingredients, new_calorie, new_image_url, new_category)
+        new_image_url = None
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename != '':
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                new_image_url = f'static/images/{filename}'
+
+        db_manager.update_menu_item(selected_menu_item_id, new_name, new_description, new_price, new_ingredients,
+                                    new_calorie, new_image_url, new_category)
 
         menu_items = db_manager.get_all_menu_items()
         return render_template('menu.html', menu_items=menu_items)
-    
+
     return render_template('update_menu.html', menu_items=menu_items)
 
 @app.route('/book')
