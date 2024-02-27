@@ -1,6 +1,6 @@
-from flask import Flask, render_template, session, request, jsonify
+from flask import Flask, render_template, session, request, jsonify, g
 from flaskr.auth import bp as auth_bp, login_required
-
+from datetime import datetime
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
 import os
@@ -42,6 +42,8 @@ def menu():
 @app.route('/checkout', methods=['POST'])
 def checkout():
     data = request.get_json()
+    current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    db_manager.create_order(current_date, g.user['email'], 7, 6000, g.user['user_id'])
     return jsonify({"status": "success", "message": "Order processed successfully."})
 
 
