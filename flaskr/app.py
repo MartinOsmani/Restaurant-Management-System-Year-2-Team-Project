@@ -41,7 +41,6 @@ def menu():
     menu_items = db_manager.get_all_menu_items()
     return render_template('menu.html', menu_items=menu_items)
 
-
 @app.route('/createOrder', methods=['POST'])
 @login_required
 def checkout():
@@ -76,6 +75,21 @@ def order_confirmation():
 @login_required
 def book():
     return render_template('book.html')
+
+@app.route('/manage_users')
+@login_required
+def manager_users():
+    user_id = session.get('user_id')
+
+    role_id = db_manager.get_role_id(user_id)
+    if role_id == 4:
+        users = db_manager.get_all_users()
+    else:
+        return render_template('404.html'), 404
+
+    return render_template('manage_users.html', users=users)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

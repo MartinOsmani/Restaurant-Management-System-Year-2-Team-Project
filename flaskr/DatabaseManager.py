@@ -48,6 +48,15 @@ class DatabaseManager:
         )
         db.commit()
 
+    @staticmethod
+    def get_all_users():
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT user_id, name, username, role_id, email FROM users")
+        users = cursor.fetchall()
+        return users
+
+
     def get_all_menu_items(self):
         db = get_db()
         cursor = db.cursor()
