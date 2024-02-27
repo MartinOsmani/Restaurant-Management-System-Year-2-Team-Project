@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, request, g, jsonify
-from flaskr.auth import bp as auth_bp, login_required
+from flaskr.auth import bp as auth_bp
+from flaskr.auth import login_required
 import random, json
 from datetime import datetime
 from flaskr.db import init_db
@@ -35,12 +36,14 @@ def index():
     return render_template(template)
 
 @app.route('/menu')
+@login_required
 def menu():
     menu_items = db_manager.get_all_menu_items()
     return render_template('menu.html', menu_items=menu_items)
 
 
 @app.route('/createOrder', methods=['POST'])
+@login_required
 def checkout():
     data = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -65,10 +68,12 @@ def checkout():
 
 
 @app.route('/order_confirmation')
+@login_required
 def order_confirmation():
     return render_template('order_confirmation.html')
 
 @app.route('/book')
+@login_required
 def book():
     return render_template('book.html')
 
