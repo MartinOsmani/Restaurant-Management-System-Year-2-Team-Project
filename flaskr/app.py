@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for, request, render_template_string
+from flask import Flask, render_template, session, redirect, url_for, request
 from flaskr.auth import bp as auth_bp, login_required
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
@@ -79,8 +79,16 @@ def create_menu_item():
         price = request.form.get('price')
         ingredients = request.form.get('ingredients')
         calorie = request.form.get('calorie')
-        image_url = request.form.get('image')
         category = request.form.get('category')
+
+        image_url = None
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename != '':
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                image_url = f'static/images/{filename}'
 
         db_manager.create_menu_item(name, description, price, ingredients, calorie, image_url, category)
         return redirect(url_for('menu'))
