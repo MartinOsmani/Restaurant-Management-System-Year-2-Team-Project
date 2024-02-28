@@ -60,7 +60,7 @@
 <body>
     <div class="content">
         <h1>Update Menu Item</h1>
-        <form method="POST" action="/update-menu" id="update_menu_form">
+        <form method="POST" action="/update-menu" id="update_menu_form" enctype="multipart/form-data">
             <label for="menu_item">Select Menu Item:</label>
             <select name="menu_item" id="menu_item">
                 {% for item in menu_items %}
@@ -83,8 +83,8 @@
             <label for="calorie">Calorie:</label>
             <input type="number" name="calorie" id="calorie">
             
-            <label for="image_url">Image URL:</label>
-            <input type="text" name="image_url" id="image_url">
+            <label for="image">Upload Image:</label>
+            <input type="file" name="image" id="image">
             
             <label for="category">Category:</label>
             <input type="text" name="category" id="category">

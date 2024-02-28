@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for, request
 from flaskr.auth import bp as auth_bp, login_required
 from flaskr.db import init_db
 from flaskr.DatabaseManager import DatabaseManager
-from werkzeug.utils import secure_filename  # Add this import
+from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
