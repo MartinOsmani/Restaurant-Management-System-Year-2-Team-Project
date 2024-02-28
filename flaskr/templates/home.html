@@ -18,7 +18,22 @@
             <a href="/order-collection" class="btn btn-lg btn-primary" role="button">Order for Collection</a>
             <a href="/order-delivery" class="btn btn-lg btn-success" role="button">Order to Deliver</a>
             <a href="/book" class="btn btn-lg btn-warning" role="button">Book</a>
+            <button type = "button" onclick="edit_user_role(0)" class="btn btn-lg btn-info" role="button">Call Waiter</a>
         </div>
     </div>
+
+    <script>
+        function edit_user_role(new_role_id)
+{
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onload = function() {
+        document.getElementById("txtHint").innerHTML = this.responseText;
+    }
+
+    xhttp.open("PUT", "edit_user_role.php?n=" + new_role_id, true);
+    xhttp.send();
+}
+    </script>
 </body>
 </html>
