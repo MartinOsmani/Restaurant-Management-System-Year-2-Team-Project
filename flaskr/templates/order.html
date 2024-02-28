@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place an Order</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Claro</h1>
+        </div>
+    </header>
+
+    <section class="order-form">
+        <div class="container">
+            <h2 class="section-heading">Place an Order</h2>
+            <form action="order_confirmation.html" method="post">
+                <div class="form-group">
+                    <label for="menu-item">Select Menu Item:</label>
+                    <select id="menu-item" name="menu-item">
+                        <option value="tacos">Tacos - £9.99</option>
+                        <option value="paella">Paella - £14.99</option>
+                        <!-- More menu items eventually -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Your Phone:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <button type="submit" class="btn">Place Order</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Claro Hispanic Restaurant. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
