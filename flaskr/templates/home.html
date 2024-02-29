@@ -26,7 +26,7 @@
             <p class="hero-description">Experience the rich flavors of authentic Hispanic cuisine</p>
             <a href="/menu" class="btn">View Our Menu</a>
             <a href="/order" class="btn order-btn">Place an Order</a>
-            <button type = "button" onclick="edit_user_role(0)" class="btn">Call Waiter</a>
+            <a href="/call-waiter" class="btn">Call Waiter</a>
         </div>
     </section>
 
@@ -35,19 +35,5 @@
             <p>&copy; 2024 Claro Hispanic Restaurant. All rights reserved.</p>
         </div>
     </footer>
-
-    <script>
-        function edit_user_role(new_role_id)
-{
-    const xhttp = new XMLHttpRequest();
-
-    xhttp.onload = function() {
-        document.getElementById("txtHint").innerHTML = this.responseText;
-    }
-
-    xhttp.open("PUT", "edit_user_role.php?n=" + new_role_id, true);
-    xhttp.send();
-}
-    </script>
 </body>
 </html>

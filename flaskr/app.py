@@ -3,9 +3,9 @@ from flaskr.auth import bp as auth_bp
 from flaskr.auth import login_required
 import random, json
 from datetime import datetime
-from flaskr.db import init_db
+from db import init_db
 from werkzeug.utils import secure_filename
-from flaskr.DatabaseManager import DatabaseManager
+from DatabaseManager import DatabaseManager
 import os
 
 app = Flask(__name__)
@@ -14,6 +14,12 @@ app.config['DATABASE'] = 'database.db'
 app.config['UPLOAD_FOLDER'] = 'static/images'
 
 db_manager = DatabaseManager()
+template_mapping = {
+    1: 'home.html',
+    2: 'waiter.html',
+    3: 'kitchen_staff.html',
+    4: 'manager.html'
+}
 
 with app.app_context():
     init_db()
@@ -28,12 +34,6 @@ def index():
     user_id = session.get('user_id')
 
     role_id = DatabaseManager.get_role_id(user_id)
-    template_mapping = {
-        1: 'home.html',
-        2: 'waiter.html',
-        3: 'kitchen_staff.html',
-        4: 'manager.html'
-    }
     template = template_mapping.get(role_id, 'home.html')
 
     return render_template(template)
@@ -43,6 +43,19 @@ def index():
 def menu():
     menu_items = db_manager.get_all_menu_items()
     return render_template('menu.html', menu_items=menu_items)
+
+@app.route('/call-waiter')
+def call_waiter():
+
+    user_id = session.get('user.id')    
+    
+    if user_id != None:
+        db_manager.change_needs_waiter(user_id)
+    
+    role_id = DatabaseManager.get_role_id(user_id)
+    template = template_mapping.get(role_id, 'home.html')
+
+    return render_template(template)
 
 @app.route('/update-menu', methods=['GET', 'POST'])
 @login_required
@@ -135,12 +148,3 @@ def book():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-def edit_role(role_id=1):
-    db = db_manager.get_db()
-    user_id = session.get('user_id')
-
-    if user_id is None:
-        return
-    else:
-        db.execute('UPDATE users SET role_id=? WHERE user_id=?', (role_id, user_id) )

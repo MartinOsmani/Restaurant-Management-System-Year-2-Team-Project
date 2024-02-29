@@ -7,7 +7,8 @@ CREATE TABLE users (
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role_id INTEGER DEFAULT 1,
-    email TEXT UNIQUE
+    email TEXT UNIQUE,
+    needs_waiter BOOLEAN DEFAULT FALSE
 );
 
 

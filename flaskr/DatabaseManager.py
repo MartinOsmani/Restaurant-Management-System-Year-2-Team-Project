@@ -80,4 +80,16 @@ class DatabaseManager:
         )
         db.commit()
 
+    @staticmethod
+    def change_needs_waiter(user_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT needs_waiter FROM users where user_id = ?", (user_id,))
+    
+        needs_waiter = cursor.fetchone()
+        db.execute('UPDATE users SET needs_waiter=? WHERE user_id=?', (needs_waiter, user_id))
+
+        db.commit()
+
+
    
