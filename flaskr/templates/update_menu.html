@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/update_menu.css">
+    <title>Update Menu Item</title>
+</head>
+<body>
+    <div class="content">
+        <h1>Update Menu Item</h1>
+        <form method="POST" action="/update-menu" id="update_menu_form" enctype="multipart/form-data">
+            <label for="menu_item">Select Menu Item:</label>
+            <select name="menu_item" id="menu_item">
+                {% for item in menu_items %}
+                    <option value="{{ item.menu_item_id }}">{{ item.menu_item_name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name">
+            
+            <label for="description">Description:</label>
+            <textarea name="description" id="description"></textarea>
+            
+            <label for="price">Price:</label>
+            <input type="number" name="price" id="price" step="0.01">
+            
+            <label for="ingredients">Ingredients:</label>
+            <textarea name="ingredients" id="ingredients"></textarea>
+            
+            <label for="calorie">Calorie:</label>
+            <input type="number" name="calorie" id="calorie">
+            
+            <label for="image">Upload Image:</label>
+            <input type="file" name="image" id="image">
+            
+            <label for="category">Category:</label>
+            <input type="text" name="category" id="category">
+
+            <button type="submit">Update Menu Item</button>
+        </form>
+    </div>
+</body>
+</html>

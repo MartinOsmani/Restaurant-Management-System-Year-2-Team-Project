@@ -4,86 +4,11 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Claro Menu</title>
-      <link rel="stylesheet" href="/static/css/menu.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/static/css/menu.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-      <style>
-         body {
-         background: #fdf6e3;
-         font-family: 'Montserrat', sans-serif;
-         margin-top: 20px;
-         }
-         .menu-table {
-         margin: auto;
-         width: 80%;
-         }
-         .menu-table .table {
-         background-color: #fff;
-         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-         }
-         .menu-table th, .menu-table td {
-         text-align: center;
-         vertical-align: middle;
-         }
-         .menu-table th {
-         background-color: #8d99ae;
-         color: #fff;
-         }
-         .menu-table .item-image img {
-         height: 100px;
-         width: auto;
-         border-radius: 5px;
-         margin-top: 10px;
-         }
-         .menu-table .ingredients {
-         font-size: 0.9em;
-         color: #333;
-         }
-         .menu-table .calories {
-         font-weight: bold;
-         color: #333;
-         }
-         .order-panel {
-         position: fixed;
-         right: 0;
-         top: 0;
-         width: 0;
-         height: 100%;
-         background-color: white;
-         overflow-x: hidden;
-         transition: 0.5s;
-         padding-top: 60px;
-         box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-         }
-         .order-items {
-         list-style: none;
-         padding: 0;
-         }
-         .order-items li {
-         display: flex;
-         justify-content: space-between;
-         align-items: center;
-         padding: 10px;
-         border-bottom: 1px solid #ddd;
-         }
-         .show-order-btn {
-         position: fixed;
-         right: 20px;
-         top: 20px;
-         z-index: 100;
-         padding: 10px 20px;
-         background-color: #3498db;
-         color: white;
-         border: none;
-         cursor: pointer;
-         border-radius: 5px;
-         }
-         #menuItems button{
-            color: black;
-         }
-      </style>
    </head>
    <body>
       <button onclick="toggleOrderPanel()" class="show-order-btn">Show Order</button>
