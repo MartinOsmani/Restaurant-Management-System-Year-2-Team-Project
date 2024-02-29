@@ -89,4 +89,15 @@ class DatabaseManager:
         )
         db.commit()
 
-   
+
+    @staticmethod
+    def delete_user(user_id):
+        db = get_db()
+        db.execute('DELETE FROM users WHERE user_id = ?', (user_id,))
+        db.commit()
+
+    @staticmethod
+    def update_user_role(user_id, role_id):
+        db = get_db()
+        db.execute('UPDATE users SET role_id = ? WHERE user_id = ?', (role_id, user_id,))
+        db.commit()
