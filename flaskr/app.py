@@ -6,6 +6,7 @@ from datetime import datetime
 from flaskr.db import init_db
 from werkzeug.utils import secure_filename
 from flaskr.DatabaseManager import DatabaseManager
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
