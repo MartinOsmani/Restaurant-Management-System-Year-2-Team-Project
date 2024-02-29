@@ -112,6 +112,7 @@ def create_menu_item():
 
     return render_template('create_menu_item.html')
 
+
 @app.route('/createOrder', methods=['POST'])
 @login_required
 def checkout():
@@ -145,6 +146,42 @@ def order_confirmation():
 @login_required
 def book():
     return render_template('book.html')
+
+@app.route('/manage_users', methods=["POST", "GET"])
+@login_required
+def manager_users():
+    user_id = session.get('user_id')
+
+    role_id = db_manager.get_role_id(user_id)
+    if role_id == 4:
+        users = db_manager.get_all_users()
+    else:
+        return render_template('404.html'), 404
+
+
+    if request.method == "POST":
+        data = request.get_json()
+        action = data.get('action', '')
+        user_id = data.get('user_id', '')
+        if action == 'delete':
+            try:
+                db_manager.delete_user(user_id)
+                return jsonify({"message": "User deleted successfully", "user_id": user_id}), 200
+            except Exception as e:
+                return jsonify({"error": "An error occurred while deleting the user"}), 500
+        elif action == 'change-role':
+            new_role_id = data.get('role_id', '')
+            try:
+                db_manager.update_user_role(user_id, new_role_id)
+                return jsonify({"message": "User role updated successfully", "user_id": user_id}), 200
+            except Exception as e:
+                return jsonify({"error": "An error occurred while updating the user's role"}), 500
+
+        return jsonify({"error": "Invalid action"}), 400
+
+    return render_template('manage_users.html', users=users)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
