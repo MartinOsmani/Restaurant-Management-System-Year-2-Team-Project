@@ -1,9 +1,11 @@
-from flask import Flask, render_template, session, redirect, url_for, request
-from flaskr.auth import bp as auth_bp, login_required
+from flask import Flask, render_template, session, request, g, jsonify, redirect, url_for
+from flaskr.auth import bp as auth_bp
+from flaskr.auth import login_required
+import random, json
+from datetime import datetime
 from flaskr.db import init_db
-from flaskr.DatabaseManager import DatabaseManager
 from werkzeug.utils import secure_filename
-import os
+from flaskr.DatabaseManager import DatabaseManager
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
@@ -36,6 +38,7 @@ def index():
     return render_template(template)
 
 @app.route('/menu')
+@login_required
 def menu():
     menu_items = db_manager.get_all_menu_items()
     return render_template('menu.html', menu_items=menu_items)
@@ -95,9 +98,48 @@ def create_menu_item():
 
     return render_template('create_menu_item.html')
 
+@app.route('/createOrder', methods=['POST'])
+@login_required
+def checkout():
+    data = request.get_json()
+    current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    table_number = random.randint(1, 20)
+    menu_items = db_manager.get_all_menu_items()
+    menu_items_dict = {item['menu_item_name']: item['menu_item_price'] for item in menu_items}
+
+    total_price = 0
+
+    for item in data:
+        name = item["name"]
+        quantity = item["quantity"]
+
+        if name in menu_items_dict:
+            price = menu_items_dict[name]
+            total_price += price * quantity
+        else:
+            print(f"Warning: Item '{name}' not found in the menu.")
+
+    db_manager.create_order(current_date, g.user['email'], table_number, total_price, g.user['user_id'])
+    return jsonify({"status": "success", "message": "Order processed successfully."})
+
+@app.route('/order_confirmation')
+@login_required
+def order_confirmation():
+    return render_template('order_confirmation.html')
+
 @app.route('/book')
+@login_required
 def book():
     return render_template('book.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+def edit_role(role_id=1):
+    db = db_manager.get_db()
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        return
+    else:
+        db.execute('UPDATE users SET role_id=? WHERE user_id=?', (role_id, user_id) )
