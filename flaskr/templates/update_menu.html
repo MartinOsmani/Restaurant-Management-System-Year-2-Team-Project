@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Menu Item</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .content {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #333;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Update Menu Item</h1>
+        <form method="POST" action="/update-menu" id="update_menu_form" enctype="multipart/form-data">
+            <label for="menu_item">Select Menu Item:</label>
+            <select name="menu_item" id="menu_item">
+                {% for item in menu_items %}
+                    <option value="{{ item.menu_item_id }}">{{ item.menu_item_name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name">
+            
+            <label for="description">Description:</label>
+            <textarea name="description" id="description"></textarea>
+            
+            <label for="price">Price:</label>
+            <input type="number" name="price" id="price" step="0.01">
+            
+            <label for="ingredients">Ingredients:</label>
+            <textarea name="ingredients" id="ingredients"></textarea>
+            
+            <label for="calorie">Calorie:</label>
+            <input type="number" name="calorie" id="calorie">
+            
+            <label for="image">Upload Image:</label>
+            <input type="file" name="image" id="image">
+            
+            <label for="category">Category:</label>
+            <input type="text" name="category" id="category">
+
+            <button type="submit">Update Menu Item</button>
+        </form>
+    </div>
+</body>
+</html>
