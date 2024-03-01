@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Orders List</title>
-    <!-- Add link to Bootstrap or your CSS stylesheets here -->
+    <link rel="stylesheet" href="/static/css/view_orders.css">
 </head>
 <body>
     <h1>Orders List</h1>
@@ -24,7 +24,7 @@
                 <td>{{ order.order_date }}</td>
                 <td>{{ order.email }}</td>
                 <td>{{ order.table_number }}</td>
-                <td>${{ order.total | format('0.2f') }}</td>
+                <td>${{ '%.2f'|format(order.total) }}</td>
             </tr>
             {% endfor %}
         </tbody>
