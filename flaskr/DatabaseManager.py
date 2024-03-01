@@ -51,7 +51,7 @@ class DatabaseManager:
     # Function to get all orders from the database.
     def get_all_orders(self):
         db = get_db()
-        cursor = db.cursot()
+        cursor = db.cursor()
         cursor.execute("SELECT * FROM orders")
         orders = cursor.fetchall()
         return orders

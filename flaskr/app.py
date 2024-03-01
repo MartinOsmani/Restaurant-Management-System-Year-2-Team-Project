@@ -58,9 +58,9 @@ def call_waiter():
     return render_template(template)
 
 # Route to view all orders.
-@app.route('/orders')
+@app.route('/view-orders')
 def show_orders():
-    orders = get_all_orders()
+    orders = db_manager.get_all_orders()
     return render_template('orders.html', orders=orders)
 
 @app.route('/update-menu', methods=['GET', 'POST'])
