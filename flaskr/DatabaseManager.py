@@ -48,6 +48,14 @@ class DatabaseManager:
         )
         db.commit()
 
+    # Function to get all orders from the database.
+    def get_all_orders(self):
+        db = get_db()
+        cursor = db.cursot()
+        cursor.execute("SELECT * FROM orders")
+        orders = cursor.fetchall()
+        return orders
+
     def get_all_menu_items(self):
         db = get_db()
         cursor = db.cursor()
