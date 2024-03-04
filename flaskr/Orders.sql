@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS orders;
 
 CREATE TABLE orders (
-  order_id SERIAL PRIMARY KEY,
+  order_id INTEGER PRIMARY KEY AUTOINCREMENT,
   order_date TIMESTAMP NOT NULL,
   email TEXT REFERENCES users(email),
   table_number INTEGER NOT NULL,
