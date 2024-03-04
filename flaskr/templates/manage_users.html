@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>User List</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Role ID</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[1] }}</td>
+                    <td>{{ user[2] }}</td>
+                    <td>{{ user[3] }}</td>
+                    <td>{{ user[4] }}</td>
+                    <td>
+                        <select class="role-change-dropdown form-control d-inline-block" style="width: auto;">
+                            <option value="1" {% if user[3] == 1 %} selected {% endif %}>1</option>
+                            <option value="2" {% if user[3] == 2 %} selected {% endif %}>2</option>
+                            <option value="3" {% if user[3] == 3 %} selected {% endif %}>3</option>
+                            <option value="4" {% if user[3] == 4 %} selected {% endif %}>4</option>
+                        </select>
+                        <button class="btn btn-primary set-btn d-inline-block" data-user-id="{{ user[0] }}">Set</button>
+                        <button class="btn btn-danger delete-btn" data-user-id="{{ user[0] }}">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('.delete-btn').click(function(){
+                var userId = $(this).data('user-id');
+                var confirmed = confirm("Are you sure you want to delete this user?");
+                if (confirmed) {
+                    $.ajax({
+                        url: '/manage_users',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({action: 'delete', user_id: userId}),
+                        success: function(response) {
+                            alert("User deleted successfully.");
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            alert("An error occurred: " + xhr.responseText);
+                        }
+                    });
+                }
+            });
+
+            $('.set-btn').click(function(){
+                var userId = $(this).data('user-id');
+                var newRoleId = parseInt($(this).siblings('.role-change-dropdown').val());
+                var confirmed = confirm("Are you sure you want to change the role?");
+                if (confirmed) {
+                    $.ajax({
+                        url: '/manage_users',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({action: 'change-role', user_id: userId, role_id: newRoleId}),
+                        success: function(response) {
+                            alert("Role changed successfully.");
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            alert("An error occurred: " + xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

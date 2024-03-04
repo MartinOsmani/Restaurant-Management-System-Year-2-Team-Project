@@ -48,6 +48,7 @@ class DatabaseManager:
         )
         db.commit()
 
+
     # Function to get all orders from the database.
     def get_all_orders(self):
         db = get_db()
@@ -62,6 +63,16 @@ class DatabaseManager:
         cursor = db.cursor()
         cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
         db.commit()
+
+
+    @staticmethod
+    def get_all_users():
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT user_id, name, username, role_id, email FROM users")
+        users = cursor.fetchall()
+        return users
+
 
     def get_all_menu_items(self):
         db = get_db()
@@ -96,6 +107,19 @@ class DatabaseManager:
         db.commit()
 
     @staticmethod
+    def delete_user(user_id):
+        db = get_db()
+        db.execute('DELETE FROM users WHERE user_id = ?', (user_id,))
+        db.commit()
+
+    @staticmethod
+    def update_user_role(user_id, role_id):
+        db = get_db()
+        db.execute('UPDATE users SET role_id = ? WHERE user_id = ?', (role_id, user_id,))
+        db.commit()
+
+
+    @staticmethod
     def change_needs_waiter(user_id):
         db = get_db()
         cursor = db.cursor()
@@ -106,5 +130,3 @@ class DatabaseManager:
 
         db.commit()
 
-
-   
