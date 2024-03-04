@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders List</title>
+    <link rel="stylesheet" href="/static/css/view_orders.css">
+</head>
+<body>
+    <h1>Orders List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Email</th>
+                <th>Table Number</th>
+                <th>Total</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>{{ order.email }}</td>
+                <td>{{ order.table_number }}</td>
+                <td>${{ '%.2f'|format(order.total) }}</td>
+                <td>
+                    <form action="/delete-order/{{ order.order_id }}" method="POST">
+                        <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

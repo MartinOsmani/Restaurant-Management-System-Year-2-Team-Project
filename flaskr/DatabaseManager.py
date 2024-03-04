@@ -48,6 +48,23 @@ class DatabaseManager:
         )
         db.commit()
 
+
+    # Function to get all orders from the database.
+    def get_all_orders(self):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM orders")
+        orders = cursor.fetchall()
+        return orders
+
+
+    def delete_order(self, order_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
+        db.commit()
+
+
     @staticmethod
     def get_all_users():
         db = get_db()
