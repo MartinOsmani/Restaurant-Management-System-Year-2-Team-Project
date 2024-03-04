@@ -63,6 +63,13 @@ def show_orders():
     orders = db_manager.get_all_orders()
     return render_template('orders.html', orders=orders)
 
+# Function to delete an order from the orders page for waiters.
+@app.route('/delete-order/<int:order_id>', methods=['POST'])
+@login_required
+def delete_order(order_id):
+    db_manager.delete_order(order_id)
+    return redirect(url_for('show_orders'))
+
 @app.route('/update-menu', methods=['GET', 'POST'])
 @login_required
 def update_menu():
