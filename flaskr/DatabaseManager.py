@@ -56,6 +56,13 @@ class DatabaseManager:
         orders = cursor.fetchall()
         return orders
 
+
+    def delete_order(self, order_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
+        db.commit()
+
     def get_all_menu_items(self):
         db = get_db()
         cursor = db.cursor()
