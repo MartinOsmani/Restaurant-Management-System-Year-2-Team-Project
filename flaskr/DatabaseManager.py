@@ -91,6 +91,10 @@ class DatabaseManager:
             return 1;
         return role_id[0]
 
+    def create_manager_user(self):
+        password="$2b$12$fKgQuaBJa.Z48HvfWLQQoOL2PJZCjgf5JwW0Fflwhp9t6qvvVowqC" # Password123!
+        self.create_user("John Doe", "manager", password, 4, "owner@email.com")
+
     def insert_test_data_for_menu(self):
         self.create_menu_item("Cheesy Fries", "Fries with cheese melted on top.", 6.99, "Potatoes, Mozeralla Cheese", 500, "static/images/testFood.jpg", "starter")
         self.create_menu_item("Curly Fries", "Potatoes sliced with a curly fry clutter.", 5.99, "Potatoes", 400, "static/images/testFood.jpg", "main")

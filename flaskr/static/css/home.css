@@ -5,13 +5,18 @@
     box-sizing: border-box;
 }
 
-/* Body styles */
 body {
-    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     background-color: #8b5858;
+    font-family: 'Montserrat', sans-serif;
 }
 
-/* Header styles */
+.content-wrapper {
+    flex: 1;
+}
+
 .header {
     background-color: #ff6600;
     padding: 20px 0;
@@ -24,6 +29,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex: 1;
 }
 
 .logo {
@@ -47,9 +53,15 @@ body {
 .hero {
     text-align: center;
     padding: 100px 0;
-    background-image: url('hero-bg.jpg');
     background-size: cover;
     color: #fff;
+}
+
+
+
+.hero-description {
+    font-size: 24px;
+    margin-bottom: 40px;
 }
 
 .hero-heading {
@@ -57,13 +69,9 @@ body {
     margin-bottom: 20px;
 }
 
-.hero-description {
-    font-size: 24px;
-    margin-bottom: 40px;
-}
-
 .btn {
     display: inline-block;
+    margin-top: 20px;
     padding: 15px 30px;
     background-color: #266136;
     color: #ff6600;
@@ -83,6 +91,9 @@ body {
     color: #fff;
     text-align: center;
     padding: 20px 0;
+    margin-top: auto;
+    position: relative;
+    width: 100%;
 }
 .order-btn {
     background-color: #ff6600;
