@@ -27,7 +27,6 @@ def register():
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
-        role_id = request.form['role_id']
         email = request.form['email']
 
         db = get_db()
@@ -41,7 +40,7 @@ def register():
         if error is None:
             try:
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                DatabaseManager.create_user(name, username, hashed_password, role_id, email)
+                DatabaseManager.create_user(name, username, hashed_password, 1, email)
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:

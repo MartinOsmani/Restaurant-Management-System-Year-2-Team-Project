@@ -24,6 +24,7 @@ template_mapping = {
 with app.app_context():
     init_db()
     db_manager.insert_test_data_for_menu()
+    db_manager.create_manager_user()
 
 # Register the auth blueprint
 app.register_blueprint(auth_bp)
