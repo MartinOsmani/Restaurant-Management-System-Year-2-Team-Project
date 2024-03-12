@@ -263,3 +263,25 @@ class DatabaseManager:
 
         db.commit()
 
+    def get_menu_item_by_id(self, menu_item_id):
+        db = get_db()
+        cursor = db.execute(
+            "SELECT * FROM menu_items WHERE menu_item_id = ?",
+            (menu_item_id,)
+        )
+        menu_item = cursor.fetchone()
+        if menu_item:
+            menu_item_details = {
+                'menu_item_id': menu_item['menu_item_id'],
+                'menu_item_name': menu_item['menu_item_name'],
+                'menu_item_description': menu_item['menu_item_description'],
+                'menu_item_price': menu_item['menu_item_price'],
+                'menu_item_ingredients': menu_item['menu_item_ingredients'],
+                'menu_item_calorie': menu_item['menu_item_calorie'],
+                'menu_item_image_url': menu_item['menu_item_image_url'],
+                'menu_item_category': menu_item['menu_item_category']
+                # Add more fields as needed
+            }
+            return menu_item_details
+        return None
+
