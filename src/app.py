@@ -30,14 +30,18 @@ with app.app_context():
 app.register_blueprint(auth_bp)
 
 @app.route('/')
-@login_required
 def index():
-    user_id = session.get('user_id')
+    if 'user_id' in session:
+        user_id = session['user_id']
+        role_id = db_manager.get_role_id(user_id)
+        template = template_mapping.get(role_id, 'home.html')
+        is_logged_in = True
+    else:
+        template = 'home.html'
+        is_logged_in = False
 
-    role_id = DatabaseManager.get_role_id(user_id)
-    template = template_mapping.get(role_id, 'home.html')
-
-    return render_template(template)
+    # Assuming your templates can handle a context variable to check login status
+    return render_template(template, is_logged_in=is_logged_in)
 
 @app.route('/menu')
 def menu():
