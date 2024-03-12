@@ -70,9 +70,9 @@ def login():
         ).fetchone()
 
         if user is None:
-            error = 'Incorrect username.'
+            error = 'Incorrect username/password.'
         elif not bcrypt.check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+            error = 'Incorrect username/password.'
 
         if error is None:
             session.clear()
