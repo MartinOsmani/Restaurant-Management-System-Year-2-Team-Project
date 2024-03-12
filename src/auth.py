@@ -42,7 +42,7 @@ def register():
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
                 DatabaseManager.create_user(name, username, hashed_password, 1, email)
             except db.IntegrityError:
-                error = f"User {username} is already registered."
+                error = "Username or Email is already registered."
             else:
                 return redirect(url_for("auth.login"))
 
