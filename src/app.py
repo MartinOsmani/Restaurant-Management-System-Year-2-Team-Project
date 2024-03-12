@@ -40,10 +40,10 @@ def index():
     return render_template(template)
 
 @app.route('/menu')
-@login_required
 def menu():
     menu_items = db_manager.get_all_menu_items()
-    return render_template('menu.html', menu_items=menu_items)
+    is_logged_in = 'user_id' in session
+    return render_template('menu.html', menu_items=menu_items, is_logged_in=is_logged_in)
 
 @app.route('/call-waiter')
 def call_waiter():

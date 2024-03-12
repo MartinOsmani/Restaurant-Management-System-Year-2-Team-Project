@@ -1,4 +1,4 @@
-from flaskr.db import init_db
+from src.db import init_db
 import pytest
 import sqlite3
 import os
@@ -20,7 +20,7 @@ def db_connection():
     connection.close()
 
 def test_tables_exist(db_connection):
-    assert check_table_exists(db_connection, "flaskr"), "The Table flaskr does not exist"
+    assert check_table_exists(db_connection, "src"), "The Table src does not exist"
     assert check_table_exists(db_connection, "orders"), "The Table orders does not exist"
     assert check_table_exists(db_connection, "order_items"), "The Table order_items does not exist"
     assert check_table_exists(db_connection, "menu_items"), "The Table menu_items does not exist"

@@ -11,7 +11,9 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
    </head>
    <body>
+   {% if is_logged_in %}
       <button onclick="toggleOrderPanel()" class="show-order-btn">Show Order</button>
+   {% endif %}
       <section class="menu">
          <div class="container">
             <h2 class="section-heading">Our Menu</h2>
@@ -38,7 +40,9 @@
                         <th>Ingredients</th>
                         <th>Calories</th>
                         <th>Price</th>
+                        {% if is_logged_in %}
                         <th>Action</th>
+                        {% endif %}
                      </tr>
                   </thead>
                   <tbody id="menuItems">
@@ -52,7 +56,9 @@
                         <td class="ingredients">{{ item.menu_item_ingredients }}</td>
                         <td class="calories">{{ item.menu_item_calorie }}</td>
                         <td class="price">{{ item.menu_item_price }}</td>
+                        {% if is_logged_in %}
                         <td><button onclick="addToOrder('{{ item.menu_item_name }}', '{{ item.menu_item_price }}')">Add to Order</button></td>
+                        {% endif %}
                      </tr>
                      {% endfor %}
                   </tbody>
@@ -60,6 +66,7 @@
             </div>
          </div>
       </section>
+      {% if is_logged_in %}
       <div class="order-panel" id="orderPanel">
          <h2>Your Order</h2>
          <ul class="order-items" id="orderItems">
@@ -67,6 +74,7 @@
           <div id="totalPrice">Total Price: $0</div>
         <button onclick="checkoutOrder()">Checkout Order</button>
       </div>
+      {% endif %}
       <footer class="footer">
          <div class="container">
             <p>&copy; 2024 Claro Hispanic Restaurant. All rights reserved.</p>
