@@ -1,11 +1,11 @@
 from flask import Flask, render_template, session, request, g, jsonify, redirect, url_for
-from flaskr.auth import bp as auth_bp
-from flaskr.auth import login_required
+from src.auth import bp as auth_bp
+from src.auth import login_required
 import random, json
 from datetime import datetime
 from db import init_db
 from werkzeug.utils import secure_filename
-from DatabaseManager import DatabaseManager
+from database_manager import DatabaseManager
 import os
 
 app = Flask(__name__)
@@ -48,11 +48,11 @@ def menu():
 @app.route('/call-waiter')
 def call_waiter():
 
-    user_id = session.get('user.id')    
-    
+    user_id = session.get('user.id')
+
     if user_id != None:
         db_manager.change_needs_waiter(user_id)
-    
+
     role_id = DatabaseManager.get_role_id(user_id)
     template = template_mapping.get(role_id, 'home.html')
 
@@ -127,9 +127,9 @@ def create_menu_item():
     return render_template('create_menu_item.html')
 
 
-@app.route('/createOrder', methods=['POST'])
+@app.route('/create-order', methods=['POST'])
 @login_required
-def checkout():
+def create_order():
     data = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     table_number = random.randint(1, 20)
@@ -151,17 +151,17 @@ def checkout():
     db_manager.create_order(current_date, g.user['email'], table_number, total_price, g.user['user_id'])
     return jsonify({"status": "success", "message": "Order processed successfully."})
 
-@app.route('/order_confirmation')
+@app.route('/order-confirmation')
 @login_required
 def order_confirmation():
     return render_template('order_confirmation.html')
 
-@app.route('/book')
-@login_required
-def book():
-    return render_template('book.html')
 
-@app.route('/manage_users', methods=["POST", "GET"])
+@app.route('/my-orders')
+
+
+
+@app.route('/manage-users', methods=["POST", "GET"])
 @login_required
 def manager_users():
     user_id = session.get('user_id')

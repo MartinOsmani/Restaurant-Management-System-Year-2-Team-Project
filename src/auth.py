@@ -5,9 +5,9 @@ from flask import (
 )
 from flask_bcrypt import Bcrypt
 
-from flaskr.db import get_db
+from src.db import get_db
 
-from flaskr.DatabaseManager import DatabaseManager
+from src.database_manager import DatabaseManager
 
 from flask_bcrypt import bcrypt
 

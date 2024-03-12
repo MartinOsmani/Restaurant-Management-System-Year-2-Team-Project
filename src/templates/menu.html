@@ -198,7 +198,7 @@
         orderData.push({name: itemName, quantity: quantity, price: itemPrice});
     }
 
-    fetch('/createOrder', {
+    fetch('/create-order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -207,7 +207,7 @@
     })
     .then(response => response.json())
     .then(data => {
-        window.location.href = '/order_confirmation';
+        window.location.href = '/order-confirmation';
     })
     .catch((error) => {
         console.error('Error:', error);
