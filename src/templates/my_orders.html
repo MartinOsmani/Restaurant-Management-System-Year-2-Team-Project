@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #fdf6e3;
+            background-color: #333;
+        }
+
+        .container {
+            padding-top: 20px;
+        }
+
+        h2 {
+            color: #ff6600;
+        }
+
+        .table {
+            background-color: #333;
+            color: #fdf6e3;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .table th {
+            background-color: #ff6600;
+            color: #fff;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #333;
+            color: #fdf6e3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>My Orders</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.order_date }}</td>
+                    <td>{{ order.total }}</td>
+                    <td>{{ order.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

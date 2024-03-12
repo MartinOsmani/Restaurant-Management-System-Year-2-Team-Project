@@ -134,6 +134,20 @@ class DatabaseManager:
         cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
         db.commit()
 
+    """
+    Retrieves user's orders from the database.
+
+        Returns:
+            orders (list of sqlite3.Row): A list of all orders in the database.
+    """
+    @staticmethod
+    def get_user_orders(user_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT order_id,order_date,table_number,total FROM orders WHERE user_id = ?", (user_id,))
+        orders = cursor.fetchall()
+        return orders
+
 
     @staticmethod
     def get_all_users():

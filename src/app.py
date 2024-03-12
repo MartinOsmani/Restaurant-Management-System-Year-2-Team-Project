@@ -162,7 +162,13 @@ def order_confirmation():
 
 
 @app.route('/my-orders')
-
+def my_orders():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        orders = db_manager.get_user_orders(user_id)
+        return render_template('my_orders.html', orders=orders)
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/manage-users', methods=["POST", "GET"])
