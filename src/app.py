@@ -162,6 +162,7 @@ def order_confirmation():
 
 
 @app.route('/my-orders')
+@login_required
 def my_orders():
     if 'user_id' in session:
         user_id = session['user_id']
@@ -170,6 +171,10 @@ def my_orders():
     else:
         return redirect(url_for('login'))
 
+
+@app.route('/checkout')
+def checkout():
+    return render_template('checkout.html')
 
 @app.route('/manage-users', methods=["POST", "GET"])
 @login_required
