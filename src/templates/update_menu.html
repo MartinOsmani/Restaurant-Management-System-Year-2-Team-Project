@@ -12,6 +12,7 @@
         <form method="POST" action="/update-menu" id="update_menu_form" enctype="multipart/form-data">
             <label for="menu_item">Select Menu Item:</label>
             <select name="menu_item" id="menu_item">
+                <option value="" selected></option>
                 {% for item in menu_items %}
                     <option value="{{ item.menu_item_id }}">{{ item.menu_item_name }}</option>
                 {% endfor %}
@@ -58,7 +59,6 @@
                                 document.getElementById('price').value = menu_item_details.menu_item_price;
                                 document.getElementById('ingredients').value = menu_item_details.menu_item_ingredients;
                                 document.getElementById('calorie').value = menu_item_details.menu_item_calorie;
-                                document.getElementById('image').value = menu_item_details.menu_item_image_url;
                                 document.getElementById('category').value = menu_item_details.menu_item_category;
         
                             }
