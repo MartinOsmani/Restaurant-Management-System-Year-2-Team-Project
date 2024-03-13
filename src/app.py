@@ -88,6 +88,9 @@ def update_menu():
         new_calorie = request.form.get('calorie')
         new_category = request.form.get('category')
 
+        current_item_data = db_manager.get_menu_item_by_id(selected_menu_item_id)
+        current_image_url = current_item_data['menu_item_image_url']
+
         new_image_url = None
         if 'image' in request.files:
             file = request.files['image']
@@ -96,6 +99,8 @@ def update_menu():
                 file_path = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
                 new_image_url = f'static/images/{filename}'
+            else:
+                new_image_url = current_image_url
 
         db_manager.update_menu_item(selected_menu_item_id, new_name, new_description, new_price, new_ingredients,
                                     new_calorie, new_image_url, new_category)
