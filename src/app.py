@@ -105,6 +105,11 @@ def update_menu():
 
     return render_template('update_menu.html', menu_items=menu_items)
 
+@app.route('/get-menu-item-details/<int:menu_item_id>', methods=['GET'])
+def get_menu_item_details(menu_item_id):
+    menu_item_details = db_manager.get_menu_item_by_id(menu_item_id)
+    return jsonify(menu_item_details)
+
 @app.route('/create-menu-item', methods=['GET', 'POST'])
 @login_required
 def create_menu_item():
