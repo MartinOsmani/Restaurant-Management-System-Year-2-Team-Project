@@ -40,6 +40,34 @@
 
             <button type="submit">Update Menu Item</button>
         </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var dropdown = document.getElementById('menu_item');
+                dropdown.addEventListener('change', function () {
+                    var selectedMenuItemId = this.value;
+                    if (selectedMenuItemId !== '') {
+                        var request = new XMLHttpRequest();
+                        request.open('GET', '/get-menu-item-details/' + selectedMenuItemId, true);
+                        request.onreadystatechange = function () {
+                            if (request.readyState == 4 && request.status == 200) {
+                                var menu_item_details = JSON.parse(request.responseText);
+        
+                                document.getElementById('name').value = menu_item_details.menu_item_name;
+                                document.getElementById('description').value = menu_item_details.menu_item_description;
+                                document.getElementById('price').value = menu_item_details.menu_item_price;
+                                document.getElementById('ingredients').value = menu_item_details.menu_item_ingredients;
+                                document.getElementById('calorie').value = menu_item_details.menu_item_calorie;
+                                document.getElementById('image').value = menu_item_details.menu_item_image_url;
+                                document.getElementById('category').value = menu_item_details.menu_item_category;
+        
+                            }
+                        };
+                        request.send();
+                    }
+                });
+            });
+        </script>
     </div>
 </body>
 </html>
