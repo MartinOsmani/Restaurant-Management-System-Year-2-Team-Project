@@ -64,6 +64,13 @@ class DatabaseManager:
         cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
         db.commit()
 
+    def update_order(self, order_id, new_status):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("")
+        cursor.execute('UPDATE orders SET order_status = ? WHERE order_id = ?', (new_status, order_id))
+        db.commit()
+
 
     @staticmethod
     def get_all_users():
