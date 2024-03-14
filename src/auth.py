@@ -5,9 +5,9 @@ from flask import (
 )
 from flask_bcrypt import Bcrypt
 
-from flaskr.db import get_db
+from src.db import get_db
 
-from flaskr.DatabaseManager import DatabaseManager
+from src.database_manager import DatabaseManager
 
 from flask_bcrypt import bcrypt
 
@@ -27,7 +27,6 @@ def register():
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
-        role_id = request.form['role_id']
         email = request.form['email']
 
         db = get_db()
@@ -41,9 +40,9 @@ def register():
         if error is None:
             try:
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                DatabaseManager.create_user(name, username, hashed_password, role_id, email)
+                DatabaseManager.create_user(name, username, hashed_password, 1, email)
             except db.IntegrityError:
-                error = f"User {username} is already registered."
+                error = "Username or Email is already registered."
             else:
                 return redirect(url_for("auth.login"))
 
@@ -71,9 +70,9 @@ def login():
         ).fetchone()
 
         if user is None:
-            error = 'Incorrect username.'
+            error = 'Incorrect username/password.'
         elif not bcrypt.check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+            error = 'Incorrect username/password.'
 
         if error is None:
             session.clear()

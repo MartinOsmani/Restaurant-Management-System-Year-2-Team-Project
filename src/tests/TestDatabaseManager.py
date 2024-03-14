@@ -1,8 +1,8 @@
 import pytest
 import sqlite3
 from flask import Flask, g
-from flaskr.DatabaseManager import DatabaseManager
-from flaskr.db import init_db, get_db
+from src.database_manager import DatabaseManager
+from src.db import init_db, get_db
 
 @pytest.fixture
 def app():

@@ -1,4 +1,5 @@
 import sqlite3
+import os
 from flask import current_app, g
 import click
 
@@ -13,27 +14,25 @@ def get_db():
 
     return g.db
 
+
+def init_db(db_name='database.db'):
+    db = get_db()
+    sql_dir = os.path.join("database")
+    sql_files = ['users.sql', 'Orders.sql', 'Order Items.sql', 'Menu Items.sql']
+
+    for file_name in sql_files:
+        file_path = os.path.join(sql_dir, file_name)
+        with current_app.open_resource(file_path) as f:
+            db.executescript(f.read().decode('utf8'))
+
+
+
+
 def close_db(e=None):
     db = g.pop('db', None)
 
     if db is not None:
         db.close()
-
-def init_db(db_name='database.db'):
-    db = get_db()
-
-    with current_app.open_resource('users.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-
-    with current_app.open_resource('Orders.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-
-    with current_app.open_resource('Order Items.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-
-    with current_app.open_resource('Menu Items.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-
 
 @click.command('init-db')
 def init_db_command():

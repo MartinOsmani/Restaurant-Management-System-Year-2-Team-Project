@@ -2,38 +2,41 @@ body {
     background: #fdf6e3;
     font-family: 'Montserrat', sans-serif;
     margin-top: 20px;
-    }
-    .menu-table {
+}
+
+.menu-table {
     margin: auto;
     width: 80%;
-    }
-    .menu-table .table {
+}
+
+.menu-table .table {
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .menu-table th, .menu-table td {
+}
+
+.menu-table th, .menu-table td {
     text-align: center;
     vertical-align: middle;
-    }
-    .menu-table th {
-    background-color: #8d99ae;
+}
+
+.menu-table th {
+    background-color: #ff6600;
     color: #fff;
-    }
-    .menu-table .item-image img {
+}
+
+.menu-table .item-image img {
     height: 100px;
     width: auto;
     border-radius: 5px;
     margin-top: 10px;
-    }
-    .menu-table .ingredients {
+}
+
+.menu-table .ingredients, .menu-table .calories {
     font-size: 0.9em;
     color: #333;
-    }
-    .menu-table .calories {
-    font-weight: bold;
-    color: #333;
-    }
-    .order-panel {
+}
+
+.order-panel {
     position: fixed;
     right: 0;
     top: 0;
@@ -44,51 +47,71 @@ body {
     transition: 0.5s;
     padding-top: 60px;
     box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-    }
-    .order-items {
+}
+
+.order-items {
     list-style: none;
     padding: 0;
-    }
-    .order-items li {
+}
+
+.order-items li {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    }
-    .show-order-btn {
+}
+
+.show-order-btn {
     position: fixed;
     right: 20px;
     top: 20px;
     z-index: 100;
     padding: 10px 20px;
-    background-color: #3498db;
+    background-color: #ff6600;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    }
-    #menuItems button{
-       color: black;
-    }
+}
+
+#menuItems button {
+    background-color: #266136;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#menuItems button:hover {
+    background-color: #ff6600;
+}
 
 th {
-    background-color:darkslategray;
-    color:white;
+    background-color: #ff6600;
+    color: white;
 }
 
 tr:nth-child(even) {
-    background-color:cadetblue;
+    background-color: #f0f0f0;
 }
 
 td {
-    background-color:darkgray;
-    color:white;
+    color: black;
 }
 
-.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 95%;
-  }
+select {
+    background-color: #ff6600;
+    color: white;
+    border: 1px solid #fff;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+select option {
+    background-color: white;
+    color: black;
+}

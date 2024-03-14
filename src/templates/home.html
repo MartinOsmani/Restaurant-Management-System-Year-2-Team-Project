@@ -3,36 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claro Hispanic Restaurant</title>
+    <title>Oaxaca Restaurant</title>
     <link rel="stylesheet" href="/static/css/home.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <h1 class="logo">Claro</h1>
+            <h1 class="logo">Oaxaca</h1>
             <nav class="nav">
                 <a href="/" class="nav-link">Home</a>
                 <a href="/menu" class="nav-link">Menu</a>
                 <a href="#" class="nav-link">About Us</a>
                 <a href="#" class="nav-link">Contact</a>
+                {% if is_logged_in %}
+                <a href="/auth/logout" class="nav-link">Logout</a>
+                {% endif %}
             </nav>
         </div>
     </header>
 
     <section class="hero">
-        <div class="container">
-            <h2 class="hero-heading">Welcome to Claro</h2>
-            <p class="hero-description">Experience the rich flavors of authentic Hispanic cuisine</p>
-            <a href="/menu" class="btn">View Our Menu</a>
-            <a href="/order" class="btn order-btn">Place an Order</a>
-            <a href="/call-waiter" class="btn">Call Waiter</a>
-        </div>
-    </section>
+    <div class="container">
+        <h2 class="hero-heading">Welcome to Oaxaca</h2>
+        <a href="/menu" class="btn">View Our Menu</a>
+        {% if is_logged_in %}
+        <a href="/order" class="btn order-btn">Place an Order</a>
+        <a href="/call-waiter" class="btn">Call Waiter</a>
+        {% else %}
+        <a href="/auth/login" class="btn">Login</a>
+        <a href="/auth/register" class="btn">Register</a>
+        {% endif %}
+    </div>
+</section>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Claro Hispanic Restaurant. All rights reserved.</p>
+            <p>&copy; 2024 Oaxaca Restaurant. All rights reserved.</p>
         </div>
     </footer>
 </body>
