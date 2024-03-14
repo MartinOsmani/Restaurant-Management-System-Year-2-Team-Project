@@ -3,7 +3,7 @@
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Claro Menu</title>
+      <title>Menu</title>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
       <link rel="stylesheet" href="/static/css/menu.css">
@@ -47,7 +47,7 @@
                   </thead>
                   <tbody id="menuItems">
                      {% for item in menu_items %}
-                     <tr category="{{ item.menu_item_category }}">
+                     <tr category="{{ item.menu_item_category }}" data-id="{{ item.menu_item_id }}">
                         <td class="item-image">
                            <img src="{{ item.menu_item_image_url }}" alt="{{ item.menu_item_name }}" class="item-thumbnail">
                            <span class="item-name">{{ item.menu_item_name }}</span>
@@ -57,7 +57,7 @@
                         <td class="calories">{{ item.menu_item_calorie }}</td>
                         <td class="price">{{ item.menu_item_price }}</td>
                         {% if is_logged_in %}
-                        <td><button onclick="addToOrder('{{ item.menu_item_name }}', '{{ item.menu_item_price }}')">Add to Order</button></td>
+                        <td><button onclick="addToOrder('{{ item.menu_item_id }}', '{{ item.menu_item_name }}', '{{ item.menu_item_price }}')">Add to Order</button></td>
                         {% endif %}
                      </tr>
                      {% endfor %}
@@ -77,7 +77,7 @@
       {% endif %}
       <footer class="footer">
          <div class="container">
-            <p>&copy; 2024 Claro Hispanic Restaurant. All rights reserved.</p>
+            <p>&copy; 2024 Oaxaca Restaurant. All rights reserved.</p>
          </div>
       </footer>
       <script>
@@ -138,24 +138,29 @@
     var totalPrice = 0;
     for (var i = 0; i < items.length; i++) {
         var itemPrice = parseFloat(items[i].getAttribute("data-price"));
-        var quantity = parseInt(items[i].getElementsByTagName("div")[0].childNodes[1].textContent.replace('x', ''), 10);
+        var quantityText = items[i].querySelector("div > span:last-child").textContent;
+        var quantity = parseInt(quantityText.replace('x', ''), 10);
         totalPrice += itemPrice * quantity;
     }
     document.getElementById("totalPrice").textContent = `Total Price: $${totalPrice.toFixed(2)}`;
 }
-         function addToOrder(itemName, itemPrice) {
+
+function removeItem(itemElement) {
+    itemElement.remove();
+    updateTotalPrice();
+}
+
+function addToOrder(itemId, itemName, itemPrice) {
     var ul = document.getElementById("orderItems");
     var items = ul.getElementsByTagName("li");
     var itemFound = false;
 
     for (var i = 0; i < items.length; i++) {
-        var itemDetails = items[i].getElementsByTagName("div")[0];
-        var namePart = itemDetails.childNodes[0].textContent.trim();
-        var quantity = parseInt(itemDetails.childNodes[1].textContent.replace('x', ''), 10);
-
-        if (namePart === itemName) {
-            quantity += 1;
-            itemDetails.childNodes[1].textContent = `${quantity}x`;
+        if (items[i].getAttribute("data-id") === itemId.toString()) {
+            var quantitySpan = items[i].querySelector("div > span:last-child");
+            var currentQuantity = parseInt(quantitySpan.textContent.replace('x', ''));
+            currentQuantity += 1;
+            quantitySpan.textContent = currentQuantity + 'x';
             itemFound = true;
             break;
         }
@@ -163,25 +168,25 @@
 
     if (!itemFound) {
         var li = document.createElement("li");
+        li.setAttribute("data-id", itemId);
+        li.setAttribute("data-price", itemPrice);
+
+        var div = document.createElement("div");
         var textSpan = document.createElement("span");
         textSpan.textContent = itemName + " ";
         var quantitySpan = document.createElement("span");
         quantitySpan.textContent = "1x";
 
-        var nameQuantityContainer = document.createElement("div");
-        nameQuantityContainer.appendChild(textSpan);
-        nameQuantityContainer.appendChild(quantitySpan);
-
         var removeBtn = document.createElement("button");
         removeBtn.textContent = "Remove";
-        removeBtn.onclick = function() { removeItem(this.parentNode); };
-        removeBtn.style.marginLeft = "auto";
+        removeBtn.onclick = function() { removeItem(li); };
+        removeBtn.style.marginLeft = "10px";
 
-        li.appendChild(nameQuantityContainer);
+        div.appendChild(textSpan);
+        div.appendChild(quantitySpan);
+        li.appendChild(div);
         li.appendChild(removeBtn);
         ul.appendChild(li);
-
-        li.setAttribute("data-price", itemPrice.toString());
     }
 
     updateTotalPrice();
@@ -189,10 +194,11 @@
 
 
 
+
          function removeItem(itemElement) {
-            itemElement.remove();
-            updateTotalPrice();
-         }
+    itemElement.remove();
+    updateTotalPrice();
+}
 
 
          function checkoutOrder() {
@@ -203,7 +209,8 @@
         var itemName = itemDetails.childNodes[0].textContent.trim();
         var quantity = parseInt(itemDetails.childNodes[1].textContent.replace('x', ''), 10);
         var itemPrice = items[i].getAttribute("data-price");
-        orderData.push({name: itemName, quantity: quantity, price: itemPrice});
+        var itemId = items[i].getAttribute("data-id")
+        orderData.push({id: itemId, name: itemName, quantity: quantity, price: itemPrice});
     }
 
     fetch('/create-order', {

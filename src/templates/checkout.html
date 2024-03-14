@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Oaxaca Restaurant</title>
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #8b5858;
+            color: #333;
+        }
+
+        .container {
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .receipt-container {
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-top: 50px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-item, .total-price {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-price {
+            font-weight: bold;
+            border-top: 2px dashed #333;
+            padding-top: 10px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #ff6600;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background-color: #cc5500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <h2>Oaxaca Restaurant</h2>
+                <div>Order Receipt</div>
+            </div>
+
+            <div class="receipt-item">Email: <span>{{ order['email'] }}</span></div>
+            <div class="receipt-item">Order Date: <span>{{ order['order_date'] }}</span></div>
+            <div class="total-price">Total: <span>£{{ "%.2f"|format(order['total']) }}</span></div>
+
+            <button onclick="alert('Third Party will handle this'); pay();" class="checkout-btn">Pay with Card</button>
+        </div>
+    </div>
+ <script>
+      function pay() {
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                // Include necessary data as JSON in the body, if needed
+                body: JSON.stringify({ action: 'pay_with_card' })
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/my-orders';
+                } else {
+                    alert('Payment failed, please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred, please try again.');
+            });
+        };
+    </script>
+</body>
+</html>
