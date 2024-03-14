@@ -206,8 +206,11 @@ def my_orders():
 
 @app.route('/checkout/<int:order_id>')
 def checkout(order_id):
-    return render_template('checkout.html')
-
+    order = db_manager.get_order(order_id)
+    if order:
+        return render_template('checkout.html', order=order)
+    else:
+        return redirect(url_for('my_orders'))
 @app.route('/manage-users', methods=["POST", "GET"])
 @login_required
 def manager_users():

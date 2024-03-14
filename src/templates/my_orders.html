@@ -48,18 +48,28 @@
                     <th>Items</th>
                     <th>Total</th>
                     <th>Status</th>
+                    <th>Payment</th>
                 </tr>
             </thead>
             <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order.order_id }}</td>
-                    <td>{{ order.order_date }}</td>
-                    <td><a href="/order-items/{{ order.order_id }}">Items</a></td>
-                    <td>{{ order.total }}</td>
-                    <td>{{ order.order_status }}</td>
-                </tr>
-                {% endfor %}
+{% for order in orders %}
+<tr>
+    <td>{{ order.order_id }}</td>
+    <td>{{ order.order_date }}</td>
+    <td><a href="/order-items/{{ order.order_id }}">Items</a></td>
+    <td>£{{ order.total }}</td>
+    <td>{{ order.order_status }}</td>
+    <td>
+        {% if order.order_status == "The order has been delivered!" %}
+        <a href="/checkout/{{ order.order_id }}" class="btn btn-primary">Pay</a>
+        {% elif order.order_status == "The order has been Paid!" %}
+        Paid
+        {% else %}
+        Waiting!
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
             </tbody>
         </table>
     </div>

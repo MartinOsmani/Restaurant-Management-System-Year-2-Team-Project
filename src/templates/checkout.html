@@ -7,28 +7,50 @@
     <link rel="stylesheet" href="/static/css/home.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
     <style>
-        .checkout-container {
-            padding: 40px 0;
-            flex-direction: column;
-            align-items: center;
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
         }
 
-        .checkout-item {
+        .container {
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .receipt-container {
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-top: 50px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-item, .total-price {
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 10px;
         }
 
         .total-price {
-            margin-top: 20px;
-            font-size: 24px;
             font-weight: bold;
+            border-top: 2px dashed #333;
+            padding-top: 10px;
         }
 
         .checkout-btn {
-            margin-top: 30px;
-            padding: 15px 50px;
+            width: 100%;
+            padding: 10px;
             background-color: #ff6600;
             color: #fff;
-            font-size: 22px;
             border: none;
             cursor: pointer;
             border-radius: 5px;
@@ -41,28 +63,19 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <h1 class="logo">Oaxaca</h1>
-            <nav class="nav">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/menu" class="nav-link">Menu</a>
-                <a href="#" class="nav-link">About Us</a>
-                <a href="#" class="nav-link">Contact</a>
-            </nav>
-        </div>
-    </header>
+    <div class="container">
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <h2>Oaxaca Restaurant</h2>
+                <div>Order Receipt</div>
+            </div>
 
-    <div class="container checkout-container">
-        <h2>Checkout</h2>
-        <!-- checkout items here -->
-        <button class="checkout-btn">Checkout</button>
+            <div class="receipt-item">Email: <span>{{ order['email'] }}</span></div>
+            <div class="receipt-item">Order Date: <span>{{ order['order_date'] }}</span></div>
+            <div class="total-price">Total: <span>£{{ order['total'] }}</span></div>
+
+            <button class="checkout-btn">Pay</button>
+        </div>
     </div>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Oaxaca Restaurant. All rights reserved.</p>
-        </div>
-    </footer>
 </body>
 </html>

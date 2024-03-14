@@ -11,6 +11,7 @@ CREATE TABLE orders (
   CHECK (order_status IN ('Order confirmed!',
                           'The order is in the kitchen!',
                           'The order is ready and will be with you shortly!',
-                          'The order has been delivered!'))
+                          'The order has been delivered!',
+                          'The has been Paid!'))
 );
 

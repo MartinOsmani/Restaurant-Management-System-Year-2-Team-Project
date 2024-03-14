@@ -109,6 +109,7 @@ class DatabaseManager:
         cursor.execute(
                 "INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)", (order_id, menu_item_id, quantity))
         db.commit()
+
     @staticmethod
     def get_order_items(order_id):
         db = get_db()
@@ -183,6 +184,14 @@ class DatabaseManager:
         cursor.execute("SELECT order_id,order_date,total,order_status FROM orders WHERE user_id = ?", (user_id,))
         orders = cursor.fetchall()
         return orders
+
+    @staticmethod
+    def get_order(order_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT email,total,order_date FROM orders WHERE order_id = ?", (order_id,))
+        order = cursor.fetchone()
+        return order
 
 
     # Database call to update an order based on its order_id and selected order_status.
