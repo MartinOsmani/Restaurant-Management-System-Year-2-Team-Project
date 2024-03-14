@@ -32,6 +32,9 @@
             
             <label for="calorie">Calorie:</label>
             <input type="number" name="calorie" id="calorie">
+
+            <label for="current_image">Current Image:</label>
+            <img id="current_image_preview" src="">
             
             <label for="image">Upload Image:</label>
             <input type="file" name="image" id="image">
@@ -60,6 +63,9 @@
                                 document.getElementById('ingredients').value = menu_item_details.menu_item_ingredients;
                                 document.getElementById('calorie').value = menu_item_details.menu_item_calorie;
                                 document.getElementById('category').value = menu_item_details.menu_item_category;
+
+                                var currentImagePreview = document.getElementById('current_image_preview');
+                                currentImagePreview.src = menu_item_details.menu_item_image_url;
         
                             }
                         };
