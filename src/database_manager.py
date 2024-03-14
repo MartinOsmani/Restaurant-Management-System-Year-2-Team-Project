@@ -1,6 +1,6 @@
 import sqlite3
 from flask import g, current_app
-from db import get_db
+from src.db import get_db
 
 
 class DatabaseManager:
