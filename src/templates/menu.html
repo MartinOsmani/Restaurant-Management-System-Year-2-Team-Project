@@ -138,21 +138,29 @@
     var totalPrice = 0;
     for (var i = 0; i < items.length; i++) {
         var itemPrice = parseFloat(items[i].getAttribute("data-price"));
-        var quantity = parseInt(items[i].getElementsByTagName("div")[0].childNodes[1].textContent.replace('x', ''), 10);
+        var quantityText = items[i].querySelector("div > span:last-child").textContent;
+        var quantity = parseInt(quantityText.replace('x', ''), 10);
         totalPrice += itemPrice * quantity;
     }
     document.getElementById("totalPrice").textContent = `Total Price: $${totalPrice.toFixed(2)}`;
 }
+
+function removeItem(itemElement) {
+    itemElement.remove();
+    updateTotalPrice();
+}
+
 function addToOrder(itemId, itemName, itemPrice) {
     var ul = document.getElementById("orderItems");
     var items = ul.getElementsByTagName("li");
     var itemFound = false;
 
     for (var i = 0; i < items.length; i++) {
-        var itemDetails = items[i].getElementsByTagName("div")[0];
-        var namePart = itemDetails.childNodes[0].textContent.trim();
-
-        if (namePart === itemName && items[i].getAttribute("data-id") === itemId.toString()) {
+        if (items[i].getAttribute("data-id") === itemId.toString()) {
+            var quantitySpan = items[i].querySelector("div > span:last-child");
+            var currentQuantity = parseInt(quantitySpan.textContent.replace('x', ''));
+            currentQuantity += 1;
+            quantitySpan.textContent = currentQuantity + 'x';
             itemFound = true;
             break;
         }
@@ -160,27 +168,25 @@ function addToOrder(itemId, itemName, itemPrice) {
 
     if (!itemFound) {
         var li = document.createElement("li");
-        li.setAttribute("data-id", itemId.toString());
-        ul.appendChild(li);
+        li.setAttribute("data-id", itemId);
+        li.setAttribute("data-price", itemPrice);
+
+        var div = document.createElement("div");
         var textSpan = document.createElement("span");
         textSpan.textContent = itemName + " ";
         var quantitySpan = document.createElement("span");
         quantitySpan.textContent = "1x";
 
-        var nameQuantityContainer = document.createElement("div");
-        nameQuantityContainer.appendChild(textSpan);
-        nameQuantityContainer.appendChild(quantitySpan);
-
         var removeBtn = document.createElement("button");
         removeBtn.textContent = "Remove";
-        removeBtn.onclick = function() { removeItem(this.parentNode); };
-        removeBtn.style.marginLeft = "auto";
+        removeBtn.onclick = function() { removeItem(li); };
+        removeBtn.style.marginLeft = "10px";
 
-        li.appendChild(nameQuantityContainer);
+        div.appendChild(textSpan);
+        div.appendChild(quantitySpan);
+        li.appendChild(div);
         li.appendChild(removeBtn);
         ul.appendChild(li);
-
-        li.setAttribute("data-price", itemPrice.toString());
     }
 
     updateTotalPrice();
@@ -188,10 +194,11 @@ function addToOrder(itemId, itemName, itemPrice) {
 
 
 
+
          function removeItem(itemElement) {
-            itemElement.remove();
-            updateTotalPrice();
-         }
+    itemElement.remove();
+    updateTotalPrice();
+}
 
 
          function checkoutOrder() {

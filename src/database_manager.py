@@ -109,6 +109,19 @@ class DatabaseManager:
         cursor.execute(
                 "INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)", (order_id, menu_item_id, quantity))
         db.commit()
+    @staticmethod
+    def get_order_items(order_id):
+        db = get_db()
+        cursor = db.cursor()
+        query = """
+        SELECT mi.menu_item_name, oi.quantity
+        FROM order_items oi
+        JOIN menu_items mi ON oi.menu_item_id = mi.menu_item_id
+        WHERE oi.order_id = ?
+        """
+        cursor.execute(query, (order_id,))
+        items = cursor.fetchall()
+        return items
 
     def create_menu_item(self, name, description, price, ingredients, calorie, image_url, category):
         """

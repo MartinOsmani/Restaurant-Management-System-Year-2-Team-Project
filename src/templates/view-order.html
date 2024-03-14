@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Orders</title>
+    <title>Order Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -32,36 +32,39 @@
         }
 
         .table tbody tr:nth-child(even) {
-            background-color: #333;
+            background-color: #444;
             color: #fdf6e3;
+        }
+
+        a {
+            color: #ff6600;
+        }
+
+        a:hover {
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h2>My Orders</h2>
+        <h2>Order Details (Order ID: {{ order_id }})</h2>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Order ID</th>
-                    <th>Date</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    <th>Status</th>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
-                {% for order in orders %}
+                {% for item in items %}
                 <tr>
-                    <td>{{ order.order_id }}</td>
-                    <td>{{ order.order_date }}</td>
-                    <td><a href="/order-items/{{ order.order_id }}">Items</a></td>
-                    <td>{{ order.total }}</td>
-                    <td>{{ order.order_status }}</td>
+                    <td>{{ item.menu_item_name }}</td>
+                    <td>{{ item.quantity }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <a href="/my-orders" class="btn btn-primary mt-3">Back to My Orders</a>
     </div>
 </body>
 </html>

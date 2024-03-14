@@ -176,6 +176,17 @@ def create_order():
 
     return jsonify({"status": "success", "message": "Order processed successfully."})
 
+
+@app.route('/order-items/<int:order_id>')
+@login_required
+def view_order(order_id):
+    if 'user_id' in session:
+        items = db_manager.get_order_items(order_id)
+        return render_template('view-order.html', items=items, order_id=order_id)
+    else:
+        return redirect(url_for('login'))
+
+
 @app.route('/order-confirmation')
 @login_required
 def order_confirmation():
@@ -193,8 +204,8 @@ def my_orders():
         return redirect(url_for('login'))
 
 
-@app.route('/checkout')
-def checkout():
+@app.route('/checkout/<int:order_id>')
+def checkout(order_id):
     return render_template('checkout.html')
 
 @app.route('/manage-users', methods=["POST", "GET"])
