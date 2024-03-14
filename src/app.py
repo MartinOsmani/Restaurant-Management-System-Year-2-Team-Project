@@ -52,15 +52,16 @@ def menu():
 @app.route('/call-waiter')
 def call_waiter():
 
-    user_id = session.get('user.id')
+    user_id = session.get('user_id')
+    is_logged_in = 'user_id' in session
 
-    if user_id != None:
+    if user_id != None: 
         db_manager.change_needs_waiter(user_id)
 
     role_id = DatabaseManager.get_role_id(user_id)
     template = template_mapping.get(role_id, 'home.html')
 
-    return render_template(template)
+    return render_template(template, is_logged_in=is_logged_in)
 
 # Route to view all orders.
 @app.route('/view-orders')
@@ -81,7 +82,7 @@ def update_order_status(order_id):
     return redirect(url_for('show_orders'))
 
 
-# Function to delete an order from the orders page` for waiters.
+# Function to delete an order from the orders page for waiters.
 @app.route('/delete-order/<int:order_id>', methods=['POST'])
 @login_required
 def delete_order(order_id):
@@ -115,7 +116,6 @@ def update_menu():
             else:
                 new_image_url = current_image_url
 
-
         db_manager.update_menu_item(selected_menu_item_id, new_name, new_description, new_price, new_ingredients,
                                     new_calorie, new_image_url, new_category)
 
@@ -128,7 +128,6 @@ def update_menu():
 def get_menu_item_details(menu_item_id):
     menu_item_details = db_manager.get_menu_item_by_id(menu_item_id)
     return jsonify(menu_item_details)
-
 
 @app.route('/create-menu-item', methods=['GET', 'POST'])
 @login_required
@@ -162,7 +161,7 @@ def create_order():
     data = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     table_number = random.randint(1, 20)
-
+    
     menu_items = db_manager.get_all_menu_items()
     menu_items_dict = {item['menu_item_name']: {'id': item['menu_item_id'], 'price': item['menu_item_price']} for item in menu_items}
 
@@ -228,7 +227,20 @@ def checkout(order_id):
         else:
             return redirect(url_for('my_orders'))
 
+@app.route('/calling-waiter-list')
+@login_required
+def calling_waiter():
+    customers = db_manager.get_customers_need_waiter()
 
+    return render_template('calling-waiter-list.html', customers=customers)
+
+
+@app.route('/calling-waiter-list/edit-table', methods=["POST"])
+@login_required
+def calling_waiter_edit_table():
+    customers = db_manager.get_customers_need_waiter()
+
+    return render_template('calling-waiter-list.html', customers=customers)
 
 @app.route('/manage-users', methods=["POST", "GET"])
 @login_required

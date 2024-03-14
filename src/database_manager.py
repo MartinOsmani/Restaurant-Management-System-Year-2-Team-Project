@@ -1,6 +1,6 @@
 import sqlite3
 from flask import g, current_app
-from db import get_db
+from src.db import get_db
 
 
 class DatabaseManager:
@@ -379,7 +379,7 @@ class DatabaseManager:
 
         return customers
 
-    def get_menu_item_by_id(self, menu_item_id):
+def get_menu_item_by_id(self, menu_item_id):
             """
             Retrieve details of a menu item based on its menu item ID.
 
@@ -408,4 +408,3 @@ class DatabaseManager:
                 }
                 return menu_item_details
             return None
-
