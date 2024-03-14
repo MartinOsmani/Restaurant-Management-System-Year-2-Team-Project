@@ -74,8 +74,31 @@
             <div class="receipt-item">Order Date: <span>{{ order['order_date'] }}</span></div>
             <div class="total-price">Total: <span>£{{ "%.2f"|format(order['total']) }}</span></div>
 
-            <button onclick="alert('Third Party will handle this')" class="checkout-btn">Pay with Card</button>
+            <button onclick="alert('Third Party will handle this'); pay();" class="checkout-btn">Pay with Card</button>
         </div>
     </div>
+ <script>
+      function pay() {
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                // Include necessary data as JSON in the body, if needed
+                body: JSON.stringify({ action: 'pay_with_card' })
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/my-orders';
+                } else {
+                    alert('Payment failed, please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred, please try again.');
+            });
+        };
+    </script>
 </body>
 </html>
