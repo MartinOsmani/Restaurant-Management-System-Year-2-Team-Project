@@ -1,6 +1,6 @@
 import sqlite3
 from flask import g, current_app
-from src.db import get_db
+from db import get_db
 
 
 class DatabaseManager:
@@ -109,7 +109,7 @@ class DatabaseManager:
         cursor.execute(
                 "INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)", (order_id, menu_item_id, quantity))
         db.commit()
-
+    
     @staticmethod
     def get_order_items(order_id):
         """
@@ -129,7 +129,7 @@ class DatabaseManager:
         cursor.execute(query, (order_id,))
         items = cursor.fetchall()
         return items
-
+    
     def create_menu_item(self, name, description, price, ingredients, calorie, image_url, category):
         """
         Inserts a new menu item into the database.
@@ -356,10 +356,26 @@ class DatabaseManager:
         """
         db = get_db()
         cursor = db.cursor()
-        cursor.execute("SELECT needs_waiter FROM users where user_id = ?", (user_id,))
+        cursor.execute("SELECT needs_waiter FROM users where user_id =?", (user_id,))
     
         needs_waiter = cursor.fetchone()
+        needs_waiter = needs_waiter[0]
+
+        if needs_waiter == 0:
+            needs_waiter = 1
+        else:
+            needs_waiter = 0
         db.execute('UPDATE users SET needs_waiter=? WHERE user_id=?', (needs_waiter, user_id))
 
         db.commit()
+
+    @staticmethod
+    def get_customers_need_waiter():
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute('SELECT user_id, name FROM users WHERE needs_waiter=TRUE')
+
+        customers = cursor.fetchall()
+
+        return customers
 
