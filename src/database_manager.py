@@ -363,3 +363,33 @@ class DatabaseManager:
 
         db.commit()
 
+    def get_menu_item_by_id(self, menu_item_id):
+            """
+            Retrieve details of a menu item based on its menu item ID.
+
+            Parameters:
+                menu_item_id (int): The ID of the menu item to retrieve details for.
+
+            Returns:
+                dict or None: A dictionary containing details of the menu item, or None if the menu item is not found.
+            """
+            db = get_db()
+            cursor = db.execute(
+                "SELECT * FROM menu_items WHERE menu_item_id = ?",
+                (menu_item_id,)
+            )
+            menu_item = cursor.fetchone()
+            if menu_item:
+                menu_item_details = {
+                    'menu_item_id': menu_item['menu_item_id'],
+                    'menu_item_name': menu_item['menu_item_name'],
+                    'menu_item_description': menu_item['menu_item_description'],
+                    'menu_item_price': menu_item['menu_item_price'],
+                    'menu_item_ingredients': menu_item['menu_item_ingredients'],
+                    'menu_item_calorie': menu_item['menu_item_calorie'],
+                    'menu_item_image_url': menu_item['menu_item_image_url'],
+                    'menu_item_category': menu_item['menu_item_category']
+                }
+                return menu_item_details
+            return None
+
