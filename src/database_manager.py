@@ -149,6 +149,23 @@ class DatabaseManager:
         return orders
 
 
+    # Database call to update an order based on its order_id and selected order_status.
+    def update_order(self, order_id, new_status):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("")
+        cursor.execute('UPDATE orders SET order_status = ? WHERE order_id = ?', (new_status, order_id))
+        db.commit()
+
+
+    def delete_order(self, order_id):
+
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
+        db.commit()
+
+
     @staticmethod
     def get_all_users():
         """
