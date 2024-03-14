@@ -12,6 +12,6 @@ CREATE TABLE orders (
                           'The order is in the kitchen!',
                           'The order is ready and will be with you shortly!',
                           'The order has been delivered!',
-                          'The has been Paid!'))
+                          'The order has been Paid!'))
 );
 

@@ -74,7 +74,7 @@
             <div class="receipt-item">Order Date: <span>{{ order['order_date'] }}</span></div>
             <div class="total-price">Total: <span>£{{ "%.2f"|format(order['total']) }}</span></div>
 
-            <button class="checkout-btn">Pay</button>
+            <button onclick="alert('Third Party will handle this')" class="checkout-btn">Pay with Card</button>
         </div>
     </div>
 </body>

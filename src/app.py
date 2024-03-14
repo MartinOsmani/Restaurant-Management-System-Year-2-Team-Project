@@ -204,13 +204,20 @@ def my_orders():
         return redirect(url_for('login'))
 
 
-@app.route('/checkout/<int:order_id>')
+@app.route('/checkout/<int:order_id>', methods=["POST", "GET"])
 def checkout(order_id):
-    order = db_manager.get_order(order_id)
-    if order:
-        return render_template('checkout.html', order=order)
-    else:
+    if request.method == "POST":
+        db_manager.update_order(order_id, 'The order has been Paid!')
         return redirect(url_for('my_orders'))
+    else:
+        order = db_manager.get_order(order_id)
+        if order:
+            return render_template('checkout.html', order=order)
+        else:
+            return redirect(url_for('my_orders'))
+
+
+
 @app.route('/manage-users', methods=["POST", "GET"])
 @login_required
 def manager_users():
