@@ -3,9 +3,9 @@ from src.auth import bp as auth_bp
 from src.auth import login_required
 import random, json
 from datetime import datetime
-from db import init_db
+from src.db import init_db
 from werkzeug.utils import secure_filename
-from database_manager import DatabaseManager
+from src.database_manager import DatabaseManager
 import os
 
 app = Flask(__name__)
@@ -276,7 +276,11 @@ def manager_users():
 
     return render_template('manage_users.html', users=users)
 
-
+@app.route('/view-order-times')
+@login_required
+def view_order_times():
+    orders = db_manager.get_all_orders()
+    return render_template('order_times.html', orders=orders)
 
 if __name__ == '__main__':
     app.run(debug=True)

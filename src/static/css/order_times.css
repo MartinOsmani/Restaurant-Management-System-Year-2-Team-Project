@@ -1,0 +1,30 @@
+body {
+  background-color: #8b5858;
+  margin-top: 20px;
+}
+
+.page-title {
+  text-align: center; 
+  padding: 20px 0; 
+  color: #fff; 
+  font-size: 32px; 
+}
+
+.order-times-table {
+  margin: auto;
+  width: 80%;
+}
+
+.order-times-table th,
+.order-times-table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 15px; 
+  background-color: #fff; 
+}
+
+.order-times-table th {
+  background-color: #ff6600;
+  color: #fff;
+  font-weight: bold;
+}

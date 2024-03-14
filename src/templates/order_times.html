@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Times</title>
+  <link rel="stylesheet" type="text/css" href="/static/css/order_times.css">
+</head>
+<body>
+  <h2 class="section-heading page-title">Order Times</h2>
+  <table class="order-times-table">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Order Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>{{ order['order_id'] }}</td>
+        <td>{{ order['order_date'] }}</td>
+        <td>{{ order['order_status'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
