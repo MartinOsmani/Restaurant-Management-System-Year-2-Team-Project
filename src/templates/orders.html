@@ -15,6 +15,8 @@
                 <th>Email</th>
                 <th>Table Number</th>
                 <th>Total</th>
+                <th>Status</th>
+                <th>Update Status</th>
                 <th>Delete</th>
             </tr>
         </thead>
@@ -26,6 +28,17 @@
                 <td>{{ order.email }}</td>
                 <td>{{ order.table_number }}</td>
                 <td>${{ '%.2f'|format(order.total) }}</td>
+                <td>{{ order.order_status }}</td>
+                <td>
+                    <form action="/update-status/{{ order.order_id }}" method="POST">
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="Order confirmed!" {% if order.order_status == 'Order confirmed!' %}selected{% endif %}>Order confirmed!</option>
+                            <option value="The order is in the kitchen!" {% if order.order_status == 'The order is in the kitchen!' %}selected{% endif %}>The order is in the kitchen!</option>
+                            <option value="The order is ready and will be with you shortly!" {% if order.order_status == 'The order is ready and will be with you shortly!' %}selected{% endif %}>The order is ready and will be with you shortly!</option>
+                            <option value="The order has been delivered!" {% if order.order_status == 'The order has been delivered!' %}selected{% endif %}>The order has been delivered!</option>
+                        </select>
+                    </form>
+                </td>
                 <td>
                     <form action="/delete-order/{{ order.order_id }}" method="POST">
                         <input type="hidden" name="order_id" value="{{ order.order_id }}">
