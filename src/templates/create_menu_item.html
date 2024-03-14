@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/css/create_menu_item.css">
     <title>Add a Menu Item</title>
 </head>
 <body>
-    <div class="container">
-        <h2>Add a Menu Item</h2>
+    <div class="content">
+        <h1>Add a Menu Item</h1>
         <form method="POST" action="/create-menu-item" enctype="multipart/form-data">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
@@ -31,7 +31,7 @@
             <label for="category">Category:</label>
             <input type="text" id="category" name="category" required>
 
-            <button type="submit" class="btn btn-primary">Create Menu Item</button>
+            <button type="submit">Create Menu Item</button>
         </form>
     </div>
 </body>
