@@ -47,7 +47,7 @@
                   </thead>
                   <tbody id="menuItems">
                      {% for item in menu_items %}
-                     <tr category="{{ item.menu_item_category }}">
+                     <tr category="{{ item.menu_item_category }}" data-id="{{ item.menu_item_id }}">
                         <td class="item-image">
                            <img src="{{ item.menu_item_image_url }}" alt="{{ item.menu_item_name }}" class="item-thumbnail">
                            <span class="item-name">{{ item.menu_item_name }}</span>
@@ -57,7 +57,7 @@
                         <td class="calories">{{ item.menu_item_calorie }}</td>
                         <td class="price">{{ item.menu_item_price }}</td>
                         {% if is_logged_in %}
-                        <td><button onclick="addToOrder('{{ item.menu_item_name }}', '{{ item.menu_item_price }}')">Add to Order</button></td>
+                        <td><button onclick="addToOrder('{{ item.menu_item_id }}', '{{ item.menu_item_name }}', '{{ item.menu_item_price }}')">Add to Order</button></td>
                         {% endif %}
                      </tr>
                      {% endfor %}
@@ -143,7 +143,7 @@
     }
     document.getElementById("totalPrice").textContent = `Total Price: $${totalPrice.toFixed(2)}`;
 }
-         function addToOrder(itemName, itemPrice) {
+function addToOrder(itemId, itemName, itemPrice) {
     var ul = document.getElementById("orderItems");
     var items = ul.getElementsByTagName("li");
     var itemFound = false;
@@ -151,11 +151,8 @@
     for (var i = 0; i < items.length; i++) {
         var itemDetails = items[i].getElementsByTagName("div")[0];
         var namePart = itemDetails.childNodes[0].textContent.trim();
-        var quantity = parseInt(itemDetails.childNodes[1].textContent.replace('x', ''), 10);
 
-        if (namePart === itemName) {
-            quantity += 1;
-            itemDetails.childNodes[1].textContent = `${quantity}x`;
+        if (namePart === itemName && items[i].getAttribute("data-id") === itemId.toString()) {
             itemFound = true;
             break;
         }
@@ -163,6 +160,8 @@
 
     if (!itemFound) {
         var li = document.createElement("li");
+        li.setAttribute("data-id", itemId.toString());
+        ul.appendChild(li);
         var textSpan = document.createElement("span");
         textSpan.textContent = itemName + " ";
         var quantitySpan = document.createElement("span");
@@ -203,7 +202,8 @@
         var itemName = itemDetails.childNodes[0].textContent.trim();
         var quantity = parseInt(itemDetails.childNodes[1].textContent.replace('x', ''), 10);
         var itemPrice = items[i].getAttribute("data-price");
-        orderData.push({name: itemName, quantity: quantity, price: itemPrice});
+        var itemId = items[i].getAttribute("data-id")
+        orderData.push({id: itemId, name: itemName, quantity: quantity, price: itemPrice});
     }
 
     fetch('/create-order', {

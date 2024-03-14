@@ -80,13 +80,36 @@ class DatabaseManager:
                 table_number (int): The table number associated with the order.
                 total (float): The total cost of the order.
                 user_id (int): The ID of the user who placed the order.
+
+            Returns:
+                order_id (int): The ID of the newly created order.
         """
         db = get_db()
-        db.execute(
-                "INSERT INTO orders (order_date, email, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)",
-                (order_date, email, table_number, total, user_id))
+        cursor = db.cursor()
+        cursor.execute(
+                "INSERT INTO orders (order_date, email, table_number, total, user_id, order_status) VALUES (?, ?, ?, ?, ?, ?)",
+                (order_date, email, table_number, total, user_id, 'Order confirmed!'))
         db.commit()
-    
+        order_id = cursor.lastrowid
+        return order_id
+
+
+    @staticmethod
+    def insert_order_item(order_id, menu_item_id, quantity):
+        """
+        Inserts menu items in order.
+
+            Parameter:
+                order_id (int): The id of the order.
+                menu_item_id (int): The id of menu item to insert.
+                quantity (int): The quantity of the menu item.
+        """
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(
+                "INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)", (order_id, menu_item_id, quantity))
+        db.commit()
+
     def create_menu_item(self, name, description, price, ingredients, calorie, image_url, category):
         """
         Inserts a new menu item into the database.
@@ -144,7 +167,7 @@ class DatabaseManager:
     def get_user_orders(user_id):
         db = get_db()
         cursor = db.cursor()
-        cursor.execute("SELECT order_id,order_date,table_number,total FROM orders WHERE user_id = ?", (user_id,))
+        cursor.execute("SELECT order_id,order_date,total,order_status FROM orders WHERE user_id = ?", (user_id,))
         orders = cursor.fetchall()
         return orders
 
