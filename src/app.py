@@ -65,8 +65,13 @@ def call_waiter():
 # Route to view all orders.
 @app.route('/view-orders')
 def show_orders():
-    orders = db_manager.get_all_orders()
-    return render_template('orders.html', orders=orders)
+    user_id = session.get('user_id')
+    role_id = db_manager.get_role_id(user_id)
+    if role_id > 1:
+        orders = db_manager.get_all_orders()
+        return render_template('orders.html', orders=orders)
+    else:
+        return redirect('/my-orders', 302)
 
 # Function to change order status for waiters.
 @app.route('/update-status/<int:order_id>', methods=['POST'])
@@ -145,23 +150,42 @@ def create_order():
     data = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     table_number = random.randint(1, 20)
+
     menu_items = db_manager.get_all_menu_items()
-    menu_items_dict = {item['menu_item_name']: item['menu_item_price'] for item in menu_items}
+    menu_items_dict = {item['menu_item_name']: {'id': item['menu_item_id'], 'price': item['menu_item_price']} for item in menu_items}
 
     total_price = 0
 
     for item in data:
         name = item["name"]
         quantity = item["quantity"]
-
         if name in menu_items_dict:
-            price = menu_items_dict[name]
+            price = menu_items_dict[name]['price']
             total_price += price * quantity
         else:
-            print(f"Warning: Item '{name}' not found in the menu.")
+            return jsonify({"status": "error", "message": f"Item '{name}' not found in the menu."}), 400
 
-    db_manager.create_order(current_date, g.user['email'], table_number, total_price, g.user['user_id'])
+    order_id = db_manager.create_order(current_date, g.user['email'], table_number, total_price, g.user['user_id'])
+
+    for item in data:
+        name = item["name"]
+        quantity = item["quantity"]
+        if name in menu_items_dict:
+            menu_item_id = menu_items_dict[name]['id']
+            db_manager.insert_order_item(order_id, menu_item_id, quantity)
+
     return jsonify({"status": "success", "message": "Order processed successfully."})
+
+
+@app.route('/order-items/<int:order_id>')
+@login_required
+def view_order(order_id):
+    if 'user_id' in session:
+        items = db_manager.get_order_items(order_id)
+        return render_template('view-order.html', items=items, order_id=order_id)
+    else:
+        return redirect(url_for('login'))
+
 
 @app.route('/order-confirmation')
 @login_required
@@ -170,6 +194,27 @@ def order_confirmation():
 
 
 @app.route('/my-orders')
+@login_required
+def my_orders():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        orders = db_manager.get_user_orders(user_id)
+        return render_template('my_orders.html', orders=orders)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/checkout/<int:order_id>', methods=["POST", "GET"])
+def checkout(order_id):
+    if request.method == "POST":
+        db_manager.update_order(order_id, 'The order has been Paid!')
+        return redirect(url_for('my_orders'))
+    else:
+        order = db_manager.get_order(order_id)
+        if order:
+            return render_template('checkout.html', order=order)
+        else:
+            return redirect(url_for('my_orders'))
 
 
 

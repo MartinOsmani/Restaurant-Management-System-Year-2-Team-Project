@@ -80,13 +80,50 @@ class DatabaseManager:
                 table_number (int): The table number associated with the order.
                 total (float): The total cost of the order.
                 user_id (int): The ID of the user who placed the order.
+
+            Returns:
+                order_id (int): The ID of the newly created order.
         """
         db = get_db()
-        db.execute(
-                "INSERT INTO orders (order_date, email, table_number, total, user_id) VALUES (?, ?, ?, ?, ?)",
-                (order_date, email, table_number, total, user_id))
+        cursor = db.cursor()
+        cursor.execute(
+                "INSERT INTO orders (order_date, email, table_number, total, user_id, order_status) VALUES (?, ?, ?, ?, ?, ?)",
+                (order_date, email, table_number, total, user_id, 'Order confirmed!'))
         db.commit()
-    
+        order_id = cursor.lastrowid
+        return order_id
+
+
+    @staticmethod
+    def insert_order_item(order_id, menu_item_id, quantity):
+        """
+        Inserts menu items in order.
+
+            Parameter:
+                order_id (int): The id of the order.
+                menu_item_id (int): The id of menu item to insert.
+                quantity (int): The quantity of the menu item.
+        """
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(
+                "INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)", (order_id, menu_item_id, quantity))
+        db.commit()
+
+    @staticmethod
+    def get_order_items(order_id):
+        db = get_db()
+        cursor = db.cursor()
+        query = """
+        SELECT mi.menu_item_name, oi.quantity, mi.menu_item_price
+        FROM order_items oi
+        JOIN menu_items mi ON oi.menu_item_id = mi.menu_item_id
+        WHERE oi.order_id = ?
+        """
+        cursor.execute(query, (order_id,))
+        items = cursor.fetchall()
+        return items
+
     def create_menu_item(self, name, description, price, ingredients, calorie, image_url, category):
         """
         Inserts a new menu item into the database.
@@ -133,6 +170,28 @@ class DatabaseManager:
         cursor = db.cursor()
         cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
         db.commit()
+
+    """
+    Retrieves user's orders from the database.
+
+        Returns:
+            orders (list of sqlite3.Row): A list of all orders in the database.
+    """
+    @staticmethod
+    def get_user_orders(user_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT order_id,order_date,total,order_status FROM orders WHERE user_id = ?", (user_id,))
+        orders = cursor.fetchall()
+        return orders
+
+    @staticmethod
+    def get_order(order_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT email,total,order_date FROM orders WHERE order_id = ?", (order_id,))
+        order = cursor.fetchone()
+        return order
 
 
     # Database call to update an order based on its order_id and selected order_status.
