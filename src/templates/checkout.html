@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #f5f5f5;
+            background-color: #8b5858;
             color: #333;
         }
 
@@ -72,7 +72,7 @@
 
             <div class="receipt-item">Email: <span>{{ order['email'] }}</span></div>
             <div class="receipt-item">Order Date: <span>{{ order['order_date'] }}</span></div>
-            <div class="total-price">Total: <span>£{{ order['total'] }}</span></div>
+            <div class="total-price">Total: <span>£{{ "%.2f"|format(order['total']) }}</span></div>
 
             <button class="checkout-btn">Pay</button>
         </div>

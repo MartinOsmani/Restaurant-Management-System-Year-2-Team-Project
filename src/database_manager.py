@@ -115,7 +115,7 @@ class DatabaseManager:
         db = get_db()
         cursor = db.cursor()
         query = """
-        SELECT mi.menu_item_name, oi.quantity
+        SELECT mi.menu_item_name, oi.quantity, mi.menu_item_price
         FROM order_items oi
         JOIN menu_items mi ON oi.menu_item_id = mi.menu_item_id
         WHERE oi.order_id = ?
