@@ -12,6 +12,7 @@
         <form method="POST" action="/update-menu" id="update_menu_form" enctype="multipart/form-data">
             <label for="menu_item">Select Menu Item:</label>
             <select name="menu_item" id="menu_item">
+                <option value="" selected></option>
                 {% for item in menu_items %}
                     <option value="{{ item.menu_item_id }}">{{ item.menu_item_name }}</option>
                 {% endfor %}
@@ -31,6 +32,9 @@
             
             <label for="calorie">Calorie:</label>
             <input type="number" name="calorie" id="calorie">
+
+            <label for="current_image">Current Image:</label>
+            <img id="current_image_preview" src="">
             
             <label for="image">Upload Image:</label>
             <input type="file" name="image" id="image">
@@ -40,6 +44,36 @@
 
             <button type="submit">Update Menu Item</button>
         </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var dropdown = document.getElementById('menu_item');
+                dropdown.addEventListener('change', function () {
+                    var selectedMenuItemId = this.value;
+                    if (selectedMenuItemId !== '') {
+                        var request = new XMLHttpRequest();
+                        request.open('GET', '/get-menu-item-details/' + selectedMenuItemId, true);
+                        request.onreadystatechange = function () {
+                            if (request.readyState == 4 && request.status == 200) {
+                                var menu_item_details = JSON.parse(request.responseText);
+        
+                                document.getElementById('name').value = menu_item_details.menu_item_name;
+                                document.getElementById('description').value = menu_item_details.menu_item_description;
+                                document.getElementById('price').value = menu_item_details.menu_item_price;
+                                document.getElementById('ingredients').value = menu_item_details.menu_item_ingredients;
+                                document.getElementById('calorie').value = menu_item_details.menu_item_calorie;
+                                document.getElementById('category').value = menu_item_details.menu_item_category;
+
+                                var currentImagePreview = document.getElementById('current_image_preview');
+                                currentImagePreview.src = menu_item_details.menu_item_image_url;
+        
+                            }
+                        };
+                        request.send();
+                    }
+                });
+            });
+        </script>
     </div>
 </body>
 </html>
