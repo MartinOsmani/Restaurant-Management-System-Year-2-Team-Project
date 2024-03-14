@@ -11,6 +11,7 @@ body {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
     margin-bottom: 20px;
 }
 
@@ -19,15 +20,13 @@ body {
 }
 
 .btn {
-    background-color: #333;
-    border-color: #fdf6e3;
+    background-color: #266136;
+    border: none;
     color: #fdf6e3;
+    margin: 5px;
 }
 
-
 .btn:hover, .btn:focus {
-    opacity: 0.9;
-    background-color: #222222;
-    color: #fff;
-
+    background-color: #ff6600;
+    color: #333;
 }
