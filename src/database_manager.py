@@ -112,6 +112,12 @@ class DatabaseManager:
 
     @staticmethod
     def get_order_items(order_id):
+        """
+        Retrieves all the menu items associated with an order.
+
+            Returns:
+                items (list of sqlite3.Row): A list of items.
+                """
         db = get_db()
         cursor = db.cursor()
         query = """
@@ -171,14 +177,15 @@ class DatabaseManager:
         cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
         db.commit()
 
-    """
-    Retrieves user's orders from the database.
 
-        Returns:
-            orders (list of sqlite3.Row): A list of all orders in the database.
-    """
     @staticmethod
     def get_user_orders(user_id):
+        """
+        Retrieves all the user's orders from the database.
+
+            Returns:
+                orders (list of sqlite3.Row): A list of all orders in the database.
+        """
         db = get_db()
         cursor = db.cursor()
         cursor.execute("SELECT order_id,order_date,total,order_status FROM orders WHERE user_id = ?", (user_id,))
@@ -187,6 +194,12 @@ class DatabaseManager:
 
     @staticmethod
     def get_order(order_id):
+        """
+        Retrieves specified user's orders from the database.
+
+            Returns:
+                order: The order requested.
+        """
         db = get_db()
         cursor = db.cursor()
         cursor.execute("SELECT email,total,order_date FROM orders WHERE order_id = ?", (order_id,))
