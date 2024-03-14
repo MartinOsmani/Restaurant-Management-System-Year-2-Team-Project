@@ -63,6 +63,7 @@ def show_orders():
     orders = db_manager.get_all_orders()
     return render_template('orders.html', orders=orders)
 
+# Function to change order status for waiters.
 @app.route('/update-status/<int:order_id>', methods=['POST'])
 def update_order_status(order_id):
     new_status = request.form['status']
