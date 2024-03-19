@@ -12,6 +12,14 @@
    </head>
    <body>
    {% if is_logged_in %}
+    <label for="tableSelect">Select Your Table:</label>
+    <select id="tableSelect">
+        {% for i in range(1, 11) %}
+        <option value="{{ i }}">Table {{ i }}</option>
+        {% endfor %}
+    </select>
+{% endif %}
+   {% if is_logged_in %}
       <button onclick="toggleOrderPanel()" class="show-order-btn">Show Order</button>
    {% endif %}
       <section class="menu">
@@ -201,7 +209,7 @@ function addToOrder(itemId, itemName, itemPrice) {
 }
 
 
-         function checkoutOrder() {
+function checkoutOrder() {
     var items = document.getElementById("orderItems").getElementsByTagName("li");
     var orderData = [];
     for (var i = 0; i < items.length; i++) {
@@ -209,16 +217,23 @@ function addToOrder(itemId, itemName, itemPrice) {
         var itemName = itemDetails.childNodes[0].textContent.trim();
         var quantity = parseInt(itemDetails.childNodes[1].textContent.replace('x', ''), 10);
         var itemPrice = items[i].getAttribute("data-price");
-        var itemId = items[i].getAttribute("data-id")
+        var itemId = items[i].getAttribute("data-id");
         orderData.push({id: itemId, name: itemName, quantity: quantity, price: itemPrice});
     }
+
+    var tableNumber = document.getElementById("tableSelect").value;
+
+    var postData = {
+        orderItems: orderData,
+        tableNumber: tableNumber
+    };
 
     fetch('/create-order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(postData)
     })
     .then(response => response.json())
     .then(data => {
@@ -229,6 +244,7 @@ function addToOrder(itemId, itemName, itemPrice) {
         alert('An error occurred while processing your order.');
     });
 }
+
 
          filterByCategory();
       </script>

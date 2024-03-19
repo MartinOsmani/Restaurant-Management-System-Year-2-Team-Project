@@ -158,16 +158,21 @@ def create_menu_item():
 @app.route('/create-order', methods=['POST'])
 @login_required
 def create_order():
-    data = request.get_json()
+    payload = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    table_number = random.randint(1, 20)
-    
+
+
+    table_number = payload.get('tableNumber')
+    order_items = payload.get('orderItems', [])
+
     menu_items = db_manager.get_all_menu_items()
-    menu_items_dict = {item['menu_item_name']: {'id': item['menu_item_id'], 'price': item['menu_item_price']} for item in menu_items}
+    menu_items_dict = {item['menu_item_name']: {'id': item['menu_item_id'], 'price': item['menu_item_price']} for item
+                       in menu_items}
 
     total_price = 0
 
-    for item in data:
+
+    for item in order_items:
         name = item["name"]
         quantity = item["quantity"]
         if name in menu_items_dict:
@@ -178,7 +183,7 @@ def create_order():
 
     order_id = db_manager.create_order(current_date, g.user['email'], table_number, total_price, g.user['user_id'])
 
-    for item in data:
+    for item in order_items:
         name = item["name"]
         quantity = item["quantity"]
         if name in menu_items_dict:
@@ -186,7 +191,6 @@ def create_order():
             db_manager.insert_order_item(order_id, menu_item_id, quantity)
 
     return jsonify({"status": "success", "message": "Order processed successfully."})
-
 
 @app.route('/order-items/<int:order_id>')
 @login_required
