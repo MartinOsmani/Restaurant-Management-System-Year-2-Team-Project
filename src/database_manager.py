@@ -438,23 +438,19 @@ class DatabaseManager:
             list: A list of all orders for the tables assigned to the waiter. Each order
             is represented as a dictionary including the order details.
         """
-        # Retrieve the set of table numbers assigned to the waiter
         assigned_tables = self.get_assigned_tables(user_id)
         all_orders = []
 
         for table_number in assigned_tables:
-            # Retrieve all orders for each assigned table
             orders = self.get_orders_by_table(table_number)
 
-            # Convert each order row to a dictionary (assuming row_factory=sqlite3.Row)
-            # and append to the all_orders list
             for order in orders:
                 order_dict = {
                     "order_id": order["order_id"],
                     "order_date": order["order_date"],
                     "table_number": order["table_number"],
                     "total": order["total"],
-                    "user_id": order["user_id"],  # This assumes orders table has a user_id column
+                    "user_id": order["user_id"],
                     "order_status": order["order_status"]
                 }
                 all_orders.append(order_dict)

@@ -161,18 +161,15 @@ def create_menu_item():
 def view_tables():
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
-    if role_id != 2:  # Assuming '2' is the role ID for waiters
-        return redirect(url_for('index'))  # Redirect if not a waiter
+    if role_id != 2:
+        return redirect(url_for('index'))
 
-    # Fetch tables assigned to the waiter and decode them if needed
     assigned_tables_bitmask = db_manager.get_waiter_tables(user_id)
     assigned_tables = db_manager.decode_bitmask(assigned_tables_bitmask)
 
-    # Structure to hold table data and associated orders
     tables_with_orders = {}
     for table in assigned_tables:
         orders = db_manager.get_orders_by_table(table)
-        # Assuming each order's details need to be fetched individually
         detailed_orders = [db_manager.get_order(order['order_id']) for order in orders]
         tables_with_orders[table] = detailed_orders
 
@@ -223,6 +220,34 @@ def view_order(order_id):
         return render_template('view-order.html', items=items, order_id=order_id)
     else:
         return redirect(url_for('login'))
+
+
+@app.route('/edit-waiter-tables', methods=['GET', 'POST'])
+@login_required
+def edit_waiter_tables():
+    user_id = session.get('user_id')
+    role_id = db_manager.get_role_id(user_id)
+
+    if role_id != 2:
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        new_tables = request.form.getlist('tables')
+        new_tables_set = set(map(int, new_tables))
+
+        current_bitmask = db_manager.get_waiter_tables(user_id)
+        current_tables = db_manager.decode_bitmask(current_bitmask)
+        db_manager.remove_waiter_tables(user_id, current_tables)
+
+        db_manager.add_waiter_tables(user_id, new_tables_set)
+
+        return redirect(url_for('edit_waiter_tables'))
+
+    current_bitmask = db_manager.get_waiter_tables(user_id)
+    current_tables = db_manager.decode_bitmask(current_bitmask)
+    all_tables = set(range(1, 21))  # Assuming there are 20 tables in total
+
+    return render_template('assign_tables.html', current_tables=current_tables, all_tables=all_tables)
 
 
 @app.route('/order-confirmation')
