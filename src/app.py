@@ -155,6 +155,29 @@ def create_menu_item():
     return render_template('create_menu_item.html')
 
 
+
+@app.route('/view-tables', methods=['GET', 'POST'])
+@login_required
+def view_tables():
+    user_id = session.get('user_id')
+    role_id = db_manager.get_role_id(user_id)
+    if role_id != 2:  # Assuming '2' is the role ID for waiters
+        return redirect(url_for('index'))  # Redirect if not a waiter
+
+    # Fetch tables assigned to the waiter and decode them if needed
+    assigned_tables_bitmask = db_manager.get_waiter_tables(user_id)
+    assigned_tables = db_manager.decode_bitmask(assigned_tables_bitmask)
+
+    # Structure to hold table data and associated orders
+    tables_with_orders = {}
+    for table in assigned_tables:
+        orders = db_manager.get_orders_by_table(table)
+        # Assuming each order's details need to be fetched individually
+        detailed_orders = [db_manager.get_order(order['order_id']) for order in orders]
+        tables_with_orders[table] = detailed_orders
+
+    return render_template('waiter-tables.html', tables_with_orders=tables_with_orders)
+
 @app.route('/create-order', methods=['POST'])
 @login_required
 def create_order():
@@ -279,6 +302,8 @@ def manager_users():
         return jsonify({"error": "Invalid action"}), 400
 
     return render_template('manage_users.html', users=users)
+
+
 
 @app.route('/view-order-times')
 @login_required

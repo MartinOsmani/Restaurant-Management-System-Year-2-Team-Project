@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Assignment</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Assign Tables to Waiters</h2>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Waiter ID</th>
+                    <th>Waiter Name</th>
+                    <th>Current Tables</th>
+                    <th>Modify Tables</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for waiter in waiters %}
+                <tr>
+                    <td>{{ waiter.user_id }}</td>
+                    <td>{{ waiter.name }}</td>
+                    <td>{{ ",".join(map(str, waiter.tables)) }}</td>
+                    <td>
+                        <form action="{{ url_for('assign_tables') }}" method="post">
+                            <input type="hidden" name="user_id" value="{{ waiter.user_id }}">
+                            <input type="text" name="tables" placeholder="Enter table IDs" required>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

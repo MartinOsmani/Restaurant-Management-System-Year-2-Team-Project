@@ -202,7 +202,7 @@ class DatabaseManager:
         """
         db = get_db()
         cursor = db.cursor()
-        cursor.execute("SELECT email,total,order_date FROM orders WHERE order_id = ?", (order_id,))
+        cursor.execute("SELECT * FROM orders WHERE order_id = ?", (order_id,))
         order = cursor.fetchone()
         return order
 
@@ -408,3 +408,113 @@ class DatabaseManager:
                     }
                     return menu_item_details
                 return None
+
+
+
+    def get_orders_by_table(self, table_number):
+        """
+        Retrieves all orders associated with a specific table number.
+
+        Parameters:
+            table_number (int): The table number.
+
+        Returns:
+            list of sqlite3.Row: A list of all orders for the specified table.
+        """
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM orders WHERE table_number = ?", (table_number,))
+        orders = cursor.fetchall()
+        return orders
+
+    def get_all_orders_for_waiter(self, user_id):
+        """
+        Retrieves all orders associated with the tables assigned to a specific waiter.
+
+        Parameters:
+            user_id (int): The user ID of the waiter.
+
+        Returns:
+            list: A list of all orders for the tables assigned to the waiter. Each order
+            is represented as a dictionary including the order details.
+        """
+        # Retrieve the set of table numbers assigned to the waiter
+        assigned_tables = self.get_assigned_tables(user_id)
+        all_orders = []
+
+        for table_number in assigned_tables:
+            # Retrieve all orders for each assigned table
+            orders = self.get_orders_by_table(table_number)
+
+            # Convert each order row to a dictionary (assuming row_factory=sqlite3.Row)
+            # and append to the all_orders list
+            for order in orders:
+                order_dict = {
+                    "order_id": order["order_id"],
+                    "order_date": order["order_date"],
+                    "table_number": order["table_number"],
+                    "total": order["total"],
+                    "user_id": order["user_id"],  # This assumes orders table has a user_id column
+                    "order_status": order["order_status"]
+                }
+                all_orders.append(order_dict)
+
+        return all_orders
+
+    @staticmethod
+    def get_waiter_tables(user_id):
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT tables_assigned FROM users WHERE user_id = ?",(user_id,))
+        tables = cursor.fetchone()[0]
+        return tables
+
+    @staticmethod
+    def decode_bitmask(bitmask):
+        result = set()
+        for table_number in range(1, 21):  # MODIFY THIS TO CHANGE THE NUMBER OF TABLES
+            if bitmask & (1 << (table_number - 1)):
+                result.add(table_number)
+        return result
+
+    @staticmethod
+    def encode_bitmask(input):
+        bitmask = 0
+        for bits in input:
+            bitmask |= 1 << (bits - 1)
+        return bitmask
+
+    # WARNING MAKE SURE YOU DO CHECKS BEFORE USING THIS
+    def add_waiter_tables(self, user_id, assignments):
+
+        bitmask = self.get_waiter_tables(user_id)
+
+        tables = self.decode_bitmask(bitmask)
+
+        updated_tables = tables.union(set(assignments))
+
+        updated_bitmask = self.encode_bitmask(updated_tables)
+
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("UPDATE users SET tables_assigned = ? WHERE user_id = ?", (updated_bitmask, user_id))
+        db.commit()
+
+
+    def remove_waiter_tables(self, user_id, removals):
+
+        bitmask = self.get_waiter_tables(user_id)
+
+        tables = self.decode_bitmask(bitmask)
+
+        updated_tables = tables.difference(removals)
+
+        updated_bitmask = self.encode_bitmask(updated_tables)
+
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("UPDATE users SET tables_assigned = ? WHERE user_id = ?", (updated_bitmask, user_id))
+        db.commit()
+
+
+
