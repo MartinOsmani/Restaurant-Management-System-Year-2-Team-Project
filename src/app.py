@@ -155,19 +155,44 @@ def create_menu_item():
     return render_template('create_menu_item.html')
 
 
+
+@app.route('/view-tables', methods=['GET', 'POST'])
+@login_required
+def view_tables():
+    user_id = session.get('user_id')
+    role_id = db_manager.get_role_id(user_id)
+    if role_id != 2:
+        return redirect(url_for('index'))
+
+    assigned_tables_bitmask = db_manager.get_waiter_tables(user_id)
+    assigned_tables = db_manager.decode_bitmask(assigned_tables_bitmask)
+
+    tables_with_orders = {}
+    for table in assigned_tables:
+        orders = db_manager.get_orders_by_table(table)
+        detailed_orders = [db_manager.get_order(order['order_id']) for order in orders]
+        tables_with_orders[table] = detailed_orders
+
+    return render_template('waiter-tables.html', tables_with_orders=tables_with_orders)
+
 @app.route('/create-order', methods=['POST'])
 @login_required
 def create_order():
-    data = request.get_json()
+    payload = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    table_number = random.randint(1, 20)
-    
+
+
+    table_number = payload.get('tableNumber')
+    order_items = payload.get('orderItems', [])
+
     menu_items = db_manager.get_all_menu_items()
-    menu_items_dict = {item['menu_item_name']: {'id': item['menu_item_id'], 'price': item['menu_item_price']} for item in menu_items}
+    menu_items_dict = {item['menu_item_name']: {'id': item['menu_item_id'], 'price': item['menu_item_price']} for item
+                       in menu_items}
 
     total_price = 0
 
-    for item in data:
+
+    for item in order_items:
         name = item["name"]
         quantity = item["quantity"]
         if name in menu_items_dict:
@@ -178,7 +203,7 @@ def create_order():
 
     order_id = db_manager.create_order(current_date, g.user['email'], table_number, total_price, g.user['user_id'])
 
-    for item in data:
+    for item in order_items:
         name = item["name"]
         quantity = item["quantity"]
         if name in menu_items_dict:
@@ -186,7 +211,6 @@ def create_order():
             db_manager.insert_order_item(order_id, menu_item_id, quantity)
 
     return jsonify({"status": "success", "message": "Order processed successfully."})
-
 
 @app.route('/order-items/<int:order_id>')
 @login_required
@@ -196,6 +220,34 @@ def view_order(order_id):
         return render_template('view-order.html', items=items, order_id=order_id)
     else:
         return redirect(url_for('login'))
+
+
+@app.route('/edit-waiter-tables', methods=['GET', 'POST'])
+@login_required
+def edit_waiter_tables():
+    user_id = session.get('user_id')
+    role_id = db_manager.get_role_id(user_id)
+
+    if role_id != 2:
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        new_tables = request.form.getlist('tables')
+        new_tables_set = set(map(int, new_tables))
+
+        current_bitmask = db_manager.get_waiter_tables(user_id)
+        current_tables = db_manager.decode_bitmask(current_bitmask)
+        db_manager.remove_waiter_tables(user_id, current_tables)
+
+        db_manager.add_waiter_tables(user_id, new_tables_set)
+
+        return redirect(url_for('edit_waiter_tables'))
+
+    current_bitmask = db_manager.get_waiter_tables(user_id)
+    current_tables = db_manager.decode_bitmask(current_bitmask)
+    all_tables = set(range(1, 21))  # Assuming there are 20 tables in total
+
+    return render_template('assign_tables.html', current_tables=current_tables, all_tables=all_tables)
 
 
 @app.route('/order-confirmation')
@@ -279,6 +331,8 @@ def manager_users():
         return jsonify({"error": "Invalid action"}), 400
 
     return render_template('manage_users.html', users=users)
+
+
 
 @app.route('/view-order-times')
 @login_required

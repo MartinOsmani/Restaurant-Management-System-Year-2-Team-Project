@@ -8,7 +8,8 @@ CREATE TABLE users (
     password TEXT NOT NULL,
     role_id INTEGER DEFAULT 1,
     email TEXT UNIQUE,
-    needs_waiter BOOLEAN DEFAULT FALSE
+    needs_waiter BOOLEAN DEFAULT FALSE,
+    tables_assigned INTEGER DEFAULT 0
 );
 
 
