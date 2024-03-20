@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, request, g, jsonify, redirect, url_for
-from src.auth import bp as auth_bp
+from auth import bp as auth_bp
 from src.auth import login_required
 import random, json
 from datetime import datetime
@@ -239,6 +239,10 @@ def calling_waiter():
 @login_required
 def calling_waiter_edit_table():
     customers = db_manager.get_customers_need_waiter()
+
+    if request.method == "POST":
+        user_id = request.form.get('user_id')
+        db_manager.change_needs_waiter(user_id)
 
     return render_template('calling-waiter-list.html', customers=customers)
 

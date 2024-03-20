@@ -373,7 +373,7 @@ class DatabaseManager:
     def get_customers_need_waiter():
         db = get_db()
         cursor = db.cursor()
-        cursor.execute('SELECT user_id, name FROM users WHERE needs_waiter=TRUE')
+        cursor.execute('SELECT users.user_id, users.name, orders.table_number FROM users, orders WHERE needs_waiter=TRUE')
 
         customers = cursor.fetchall()
 
