@@ -133,9 +133,12 @@ def update_menu():
 
     return render_template('update_menu.html', menu_items=menu_items)
 
+# Route for retrieving the specific menu item by its ID
 @app.route('/get-menu-item-details/<int:menu_item_id>', methods=['GET'])
 def get_menu_item_details(menu_item_id):
+    # Retrieves the data of the menu item from the database based on its ID
     menu_item_details = db_manager.get_menu_item_by_id(menu_item_id)
+    # Returns it in JSON format
     return jsonify(menu_item_details)
 
 @app.route('/create-menu-item', methods=['GET', 'POST'])
