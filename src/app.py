@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, request, g, jsonify, redirect, url_for
-from auth import bp as auth_bp
+from src.auth import bp as auth_bp
 from src.auth import login_required
 import random, json
 from datetime import datetime
@@ -89,11 +89,13 @@ def delete_order(order_id):
     db_manager.delete_order(order_id)
     return redirect(url_for('show_orders'))
 
+# Route for updating menu items
 @app.route('/update-menu', methods=['GET', 'POST'])
 @login_required
 def update_menu():
     menu_items = db_manager.get_all_menu_items()
     if request.method == 'POST':
+        # Retrieves the data from the form
         selected_menu_item_id = request.form.get('menu_item')
         new_name = request.form.get('name')
         new_description = request.form.get('description')
@@ -102,20 +104,27 @@ def update_menu():
         new_calorie = request.form.get('calorie')
         new_category = request.form.get('category')
 
+        # Retrieves the menu items data from the database
         current_item_data = db_manager.get_menu_item_by_id(selected_menu_item_id)
         current_image_url = current_item_data['menu_item_image_url']
 
         new_image_url = None
+        # Checks to see if the image file is in the request
         if 'image' in request.files:
             file = request.files['image']
+            # Checks to see if the file has a filename
             if file.filename != '':
                 filename = secure_filename(file.filename)
+                # Creates the file path where the new uploaded image will be saved
                 file_path = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
+                # Updates the new_image_url to the path where the file will be saved
                 new_image_url = f'static/images/{filename}'
             else:
+                # Retains current image if no new image is uploaded
                 new_image_url = current_image_url
 
+        # Updates the menu item in the database
         db_manager.update_menu_item(selected_menu_item_id, new_name, new_description, new_price, new_ingredients,
                                     new_calorie, new_image_url, new_category)
 
