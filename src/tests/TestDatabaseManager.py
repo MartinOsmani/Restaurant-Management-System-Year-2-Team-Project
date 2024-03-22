@@ -106,6 +106,33 @@ def test_get_all_menu_items(db_manager, app):
             assert menu_item[6] == menu_items_data[i][5]
             assert menu_item[7] == menu_items_data[i][6]
 
+def test_get_all_orders(db_manager, app):
+    with app.app_context():
+        orders_data = [
+            ("2024-01-01 00:00:00", "johndoe@email.com", 1, 20.0, 1),
+            ("2024-01-01 00:00:00", "johndoe2@email.com", 2, 30.0, 2),
+            ("2024-01-01 00:00:00", "johndoe@email.com", 1, 20.0, 1),
+            ("2024-01-01 00:00:00", "johndoe@email.com", 1, 20.2, 4),
+        ]
+    for order_data in orders_data:
+        db_manager.create_order(*order_data)
 
+    all_orders = db_manager.get_all_orders()
+
+    # Check to see if the data in the retrieved orders match the expected values.
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM orders WHERE email = 'johnpork@cia.gov'")
+    order = cursor.fetchone()
+
+    # Check to see if the data in the retrieved orders match the expected values.
+    assert len(all_orders) == len(orders_data)
+    for i, all_orders in enumerate(all_orders):
+        assert order is not None
+        assert order[1].strftime('%Y-%m-%d %H:%M:%S') == '2024-01-01 00:00:00'
+        assert order[2] == orders_data[i][1]    # email
+        assert order[3] == orders_data[i][2]    # table number
+        assert order[4] == orders_data[i][3]    # total
+        assert order[5] == orders_data[i][4]    # user_id
 
 
