@@ -17,14 +17,16 @@ def get_db():
 
 def init_db(db_name='database.db'):
     db = get_db()
-    sql_dir = os.path.join("database")
+    sql_dir = os.path.join(os.path.dirname(__file__), 'database')
     sql_files = ['users.sql', 'Orders.sql', 'Order Items.sql', 'Menu Items.sql']
 
     for file_name in sql_files:
         file_path = os.path.join(sql_dir, file_name)
-        with current_app.open_resource(file_path) as f:
-            db.executescript(f.read().decode('utf8'))
+        with open(file_path, 'r') as f:
+            db.executescript(f.read())
 
+#        with current_app.open_resource(file_path) as f:
+#            db.executescript(f.read().decode('utf8'))
 
 
 
