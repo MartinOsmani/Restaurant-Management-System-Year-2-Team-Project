@@ -3,6 +3,8 @@ import sqlite3
 from flask import Flask, g
 from src.database_manager import DatabaseManager
 from src.db import init_db, get_db
+from datetime import datetime
+
 
 @pytest.fixture
 def app():
@@ -114,25 +116,24 @@ def test_get_all_orders(db_manager, app):
             ("2024-01-01 00:00:00", "johndoe@email.com", 1, 20.0, 1),
             ("2024-01-01 00:00:00", "johndoe@email.com", 1, 20.2, 4),
         ]
-    for order_data in orders_data:
-        db_manager.create_order(*order_data)
+        for order_data in orders_data:
+            db_manager.create_order(*order_data)
 
-    all_orders = db_manager.get_all_orders()
+        all_orders = db_manager.get_all_orders()
 
-    # Check to see if the data in the retrieved orders match the expected values.
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM orders WHERE email = 'johnpork@cia.gov'")
-    order = cursor.fetchone()
+        # Assert that we got the correct number of orders back
+        assert len(all_orders) == len(orders_data)
 
-    # Check to see if the data in the retrieved orders match the expected values.
-    assert len(all_orders) == len(orders_data)
-    for i, all_orders in enumerate(all_orders):
-        assert order is not None
-        assert order[1].strftime('%Y-%m-%d %H:%M:%S') == '2024-01-01 00:00:00'
-        assert order[2] == orders_data[i][1]    # email
-        assert order[3] == orders_data[i][2]    # table number
-        assert order[4] == orders_data[i][3]    # total
-        assert order[5] == orders_data[i][4]    # user_id
+        # Convert String dates in orders_data to datetime objects.
+        orders_data_dates = [datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S') for date_str, _, _, _, _ in orders_data]
+
+        for order in all_orders:
+            assert order['order_date'] in orders_data_dates
+            assert order['email'] in [od[1] for od in orders_data]
+            assert order['table_number'] in [od[2] for od in orders_data]
+            assert order['total'] in [od[3] for od in orders_data]
+            assert order['user_id'] in [od[4] for od in orders_data]
+
+
 
 
