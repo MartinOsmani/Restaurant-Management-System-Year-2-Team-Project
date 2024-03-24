@@ -141,10 +141,12 @@ def get_menu_item_details(menu_item_id):
     # Returns it in JSON format
     return jsonify(menu_item_details)
 
+# Route for creating menu items
 @app.route('/create-menu-item', methods=['GET', 'POST'])
 @login_required
 def create_menu_item():
     if request.method == 'POST':
+        # Retrieves the data from the form
         name = request.form.get('name')
         description = request.form.get('description')
         price = request.form.get('price')
@@ -152,21 +154,25 @@ def create_menu_item():
         calorie = request.form.get('calorie')
         category = request.form.get('category')
 
+        # Checks to see if the image file is in the request 
         image_url = None
         if 'image' in request.files:
             file = request.files['image']
+            # Checks to see if the file has a filename
             if file.filename != '':
                 filename = secure_filename(file.filename)
+                # Constructs the file path where the uploaded image will be saved
                 file_path = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
+                # Updates the image_url to the path where the file is saved
                 image_url = f'static/images/{filename}'
 
+        # Creates a new menu item in the database
         db_manager.create_menu_item(name, description, price, ingredients, calorie, image_url, category)
+        # Redirects user to the menu to view the menu with the newly created menu item
         return redirect(url_for('menu'))
 
     return render_template('create_menu_item.html')
-
-
 
 @app.route('/view-tables', methods=['GET', 'POST'])
 @login_required
