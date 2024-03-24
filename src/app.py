@@ -350,12 +350,13 @@ def manager_users():
 
     return render_template('manage_users.html', users=users)
 
-
-
+# Route to view order times as kitchen staff
 @app.route('/view-order-times')
 @login_required
 def view_order_times():
+    # Retrieves all orders from the database
     orders = db_manager.get_all_orders()
+    # Renders the order times template with the retrieved orders from the database
     return render_template('order_times.html', orders=orders)
 
 if __name__ == '__main__':
