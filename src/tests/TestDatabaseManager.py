@@ -135,5 +135,26 @@ def test_get_all_orders(db_manager, app):
             assert order['user_id'] in [od[4] for od in orders_data]
 
 
+def test_delete_order(db_manager, app):
+    # Create an order in the database.
+    with app.app_context():
+        order_data = ("2024-01-01 00:00:00", "testuser@email.com", 1, 25.0, 1)
+        db_manager.create_order(*order_data)
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT order_id FROM orders WHERE email = ?", (order_data[1],))
+        order = cursor.fetchone()
+        assert order is not None, "Order setup for delete test failed."
+
+        # Delete the order by order_id.
+        db_manager.delete_order(order[0])
+
+        # Verify the order has been deleted.
+        cursor.execute("SELECT * FROM orders WHERE order_id = ?", (order[0],))
+        deleted_order = cursor.fetchone()
+        assert deleted_order is None, "Order was not deleted."
+
+
+
 
 
