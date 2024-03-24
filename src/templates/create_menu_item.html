@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to the CSS file for styling -->
     <link rel="stylesheet" href="/static/css/create_menu_item.css">
     <title>Add a Menu Item</title>
 </head>
 <body>
     <div class="content">
         <h1>Add a Menu Item</h1>
+        <!-- Form to submit new menu item details -->
         <form method="POST" action="/create-menu-item" enctype="multipart/form-data">
+            <!-- Fields for new menu item that will be created -->
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             
