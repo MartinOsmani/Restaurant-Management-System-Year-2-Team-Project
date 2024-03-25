@@ -31,6 +31,15 @@ app.register_blueprint(auth_bp)
 
 @app.route('/')
 def index():
+    """
+    Checks to see if a user is logged in by checking if 'user_id' is in the session.
+    If a user is logged in, it retrieves their role_id from the database and 
+    determines the template to render based on the role_id. Otherwise, 
+    renders the default home template.
+    
+    Returns:
+        str: The rendered index template.
+    """
     if 'user_id' in session:
         user_id = session['user_id']
         role_id = db_manager.get_role_id(user_id)
@@ -45,12 +54,28 @@ def index():
 
 @app.route('/menu')
 def menu():
+    """"
+    Retrieves all menu items from the database and checks to see if a user is logged in
+    by checking if 'user_id' is in the session and then renders the menu page.
+
+    Returns:
+        str: The rendered menu template.
+    """
     menu_items = db_manager.get_all_menu_items()
     is_logged_in = 'user_id' in session
     return render_template('menu.html', menu_items=menu_items, is_logged_in=is_logged_in)
 
 @app.route('/call-waiter')
 def call_waiter():
+    """
+    If a user is logged in, the function changes the 'needs_waiter' status 
+    in the database for that user. Then, it determines the template to render 
+    based on the user's role_id. If the user is not logged in, it renders the 
+    default 'home.html' template.
+
+    Returns:
+        str: The rendered HTML template.
+    """
 
     user_id = session.get('user_id')
     is_logged_in = 'user_id' in session
@@ -63,9 +88,18 @@ def call_waiter():
 
     return render_template(template, is_logged_in=is_logged_in)
 
-# Route to view all orders.
 @app.route('/view-orders')
 def show_orders():
+    """
+    Route to view all orders.
+
+    Retrieves the user's role ID from the session and checks if user is staff. If so, it fetches 
+    all orders from the database and renders them using the 'orders.html' template. If the user
+    is a customer, it redirects them to the '/my-orders' page.
+
+    Returns:
+        str: The rendered HTML content of the orders page as staff or a redirects to page to view their orders as a customer.
+    """
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
     if role_id > 1:
@@ -74,9 +108,17 @@ def show_orders():
     else:
         return redirect('/my-orders', 302)
 
-# Function to change order status for waiters.
 @app.route('/update-status/<int:order_id>', methods=['POST'])
 def update_order_status(order_id):
+    """
+    Updates the status of a specific order.
+
+    Parameters:
+        order_id (int): The ID of the order to be updated.
+
+    Returns:
+        Response: Redirects the user to 'show_orders' after updating the order status.
+    """
     new_status = request.form['status']
     db_manager.update_order(order_id, new_status)
     return redirect(url_for('show_orders'))
@@ -86,6 +128,15 @@ def update_order_status(order_id):
 @app.route('/delete-order/<int:order_id>', methods=['POST'])
 @login_required
 def delete_order(order_id):
+    """
+    Deletes an order by its ID and redirects to the orders page.
+
+    Parameters:
+        order_id (int): The ID of the order to be deleted.
+
+    Returns:
+        Response: Redirects the user to 'show_orders' after deleting the order.
+    """
     db_manager.delete_order(order_id)
     return redirect(url_for('show_orders'))
 
