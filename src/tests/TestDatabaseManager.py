@@ -13,12 +13,14 @@ def app():
     app.config['DATABASE'] = 'database.db'
     return app
 
+
 @pytest.fixture
 def db_manager(app):
     with app.app_context():
         init_db("database.db")
         manager = DatabaseManager("database.db")
     return manager
+
 
 def test_create_user(db_manager, app):
     with app.app_context():
@@ -31,11 +33,12 @@ def test_create_user(db_manager, app):
         user = cursor.fetchone()
 
         assert user is not None
-        assert user[1] == "John Pork" 
-        assert user[2] == "johnpork" 
-        assert user[3] == "password123" 
-        assert user[4] == 1  
+        assert user[1] == "John Pork"
+        assert user[2] == "johnpork"
+        assert user[3] == "password123"
+        assert user[4] == 1
         assert user[5] == "johnpork@cia.gov"
+
 
 def test_create_duplicate_user(db_manager, app):
     with app.app_context():
@@ -46,6 +49,7 @@ def test_create_duplicate_user(db_manager, app):
         with pytest.raises(sqlite3.IntegrityError):
             with app.app_context():
                 db_manager.create_user(*user_data)
+
 
 def test_create_order(db_manager, app):
     with app.app_context():
@@ -58,19 +62,20 @@ def test_create_order(db_manager, app):
         order = cursor.fetchone()
 
         assert order is not None
-        #convert the datetime object to a string to compare data
+        # convert the datetime object to a string to compare data
         assert order[1].strftime('%Y-%m-%d %H:%M:%S') == '2024-01-01 00:00:00'
         assert order[2] == "johnpork@cia.gov"
         assert order[3] == 1  # table number
         assert order[4] == 50.00
         assert order[5] == 1  # user id
 
+
 def test_create_menu_item(db_manager, app):
     with app.app_context():
         menu_item_data = ("Dish1", "Description1", 10.99, "Ingredient1", 200, "static/images/testFood.jpg", "category1")
-        
+
         db_manager.create_menu_item(*menu_item_data)
-        
+
         db = get_db()
         cursor = db.cursor()
         cursor.execute("SELECT * FROM menu_items WHERE menu_item_name = 'Dish1'")
@@ -82,6 +87,7 @@ def test_create_menu_item(db_manager, app):
         assert created_menu_item[3] == 10.99
         assert created_menu_item[4] == "Ingredient1"
         assert created_menu_item[5] == 200
+
 
 def test_get_all_menu_items(db_manager, app):
     with app.app_context():
@@ -107,6 +113,7 @@ def test_get_all_menu_items(db_manager, app):
             assert menu_item[5] == menu_items_data[i][4]
             assert menu_item[6] == menu_items_data[i][5]
             assert menu_item[7] == menu_items_data[i][6]
+
 
 def test_get_all_orders(db_manager, app):
     with app.app_context():
@@ -155,6 +162,41 @@ def test_delete_order(db_manager, app):
         assert deleted_order is None, "Order was not deleted."
 
 
+def test_get_user_orders(db_manager, app):
+    with app.app_context():
+        # Create a test user:
+        user_data = ("Test User", "testuser", "password123", 1, "testuser@email.com")
+        db_manager.create_user(*user_data)
 
+        # Get the id for that user:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT user_id FROM users WHERE username = 'testuser'")
+        user = cursor.fetchone()
+        user_id = user[0]
 
+        # Insert orders from that user:
+        orders_data = [
+            ("2024-01-01 00:00:00", 1, 20.0, "Order confirmed!", user_id),
+            ("2024-01-02 00:00:00", 1, 30.0, "The order has been delivered!", user_id),
+        ]
+
+        for order_date, table_number, total, order_status, user_id in orders_data:
+            cursor.execute("INSERT INTO orders (order_date, table_number, total, order_status, user_id) VALUES (?, ?, ?, ?, ?)",
+                           (order_date, table_number, total, order_status, user_id))
+        db.commit()
+
+        # Test the get_user_orders() function.
+        retrieved_orders = db_manager.get_user_orders(user_id)
+
+        # Convert String dates in orders_data to datetime objects:
+        orders_data_dates = [datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S') for date_str, _, _, _, _ in orders_data]
+
+        # Assert all orders have been retrieved correctly:
+        assert len(retrieved_orders) == len(orders_data)
+
+        for i, order in enumerate(retrieved_orders):
+            assert order['order_date'] == orders_data_dates[i]
+            assert order['total'] == orders_data[i][2]
+            assert order['order_status'] == orders_data[i][3]
 
