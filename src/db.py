@@ -25,9 +25,6 @@ def init_db(db_name='database.db'):
         with open(file_path, 'r') as f:
             db.executescript(f.read())
 
-#        with current_app.open_resource(file_path) as f:
-#            db.executescript(f.read().decode('utf8'))
-
 
 
 def close_db(e=None):
