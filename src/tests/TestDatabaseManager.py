@@ -200,3 +200,35 @@ def test_get_user_orders(db_manager, app):
             assert order['total'] == orders_data[i][2]
             assert order['order_status'] == orders_data[i][3]
 
+def test_update_menu_item(db_manager, app):
+    with app.app_context():
+        # Create a menu item:
+        insert_data = ("Cake", "Delicious Cake", 10.00, "Cake ingridients", 100,
+                       "http://original-url.com/image.jpg", "Desert")
+        db = get_db()
+        db.execute(
+            "INSERT INTO menu_items (menu_item_name, menu_item_description, menu_item_price, menu_item_ingredients, menu_item_calorie, menu_item_image_url, menu_item_category) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            insert_data
+        )
+        db.commit()
+
+        # Get the menu item id.
+        menu_item_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+        # Update menu item
+        updated_data = (
+        "Choco Cake", "Chocolate Cake ", 12.00, "Chocolate", 200, "http://updated-url.com/image.jpg",
+        "Appetisers")
+        db_manager.update_menu_item(menu_item_id, *updated_data)
+
+        # Fetch updated item from database
+        updated_item = db.execute("SELECT * FROM menu_items WHERE menu_item_id = ?", (menu_item_id,)).fetchone()
+
+        # Assert that the changes have been made
+        assert updated_item["menu_item_name"] == updated_data[0]
+        assert updated_item["menu_item_description"] == updated_data[1]
+        assert updated_item["menu_item_price"] == updated_data[2]
+        assert updated_item["menu_item_ingredients"] == updated_data[3]
+        assert updated_item["menu_item_calorie"] == updated_data[4]
+        assert updated_item["menu_item_image_url"] == updated_data[5]
+        assert updated_item["menu_item_category"] == updated_data[6]
