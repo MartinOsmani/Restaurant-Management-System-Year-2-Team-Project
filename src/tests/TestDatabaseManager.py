@@ -254,7 +254,23 @@ def test_delete_user(db_manager, app, setup_user_data):
         # Verify that the second user has been deleted and only one remains.
         cursor.execute("SELECT COUNT(*) FROM users")
         remaining_users = cursor.fetchone()[0]
-        assert remaining_users == 1, "User was not deleted"
+        assert remaining_users == 1, "User was not deleted!"
+
+def test_update_user_role(db_manager, app, setup_user_data):
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+        # Check current user id (i.e. customer)
+        cursor.execute("SELECT * FROM users WHERE user_id = ?", (1,))
+        user = cursor.fetchone()
+        assert user is not None
+        # Update user by user_id from customer to waiter
+        db_manager.update_user_role(1, 2)
+
+        # Verify user_role has been updated
+        cursor.execute("SELECT role_id FROM users WHERE user_id = ?", (1,))
+        updated_user_role = cursor.fetchone()["role_id"]
+        assert updated_user_role == 2, "User's role was not changed!"
 
 
 
