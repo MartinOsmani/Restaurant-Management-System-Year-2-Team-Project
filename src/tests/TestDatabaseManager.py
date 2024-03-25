@@ -28,6 +28,13 @@ def setup_user_data(db_manager, app):
                      ("Harry Potter", "harrypotter", "password321", 2, "hp@email.com")]
         for user in user_data:
             db_manager.create_user(*user)
+        menu_items_data = [
+            ("Dish1", "Description1", 10.99, "Ingredient1", 200, "static/images/testFood.jpg", "category1"),
+            ("Dish2", "Description2", 11.99, "Ingredient2", 300, "static/images/testFood.jpg", "category2"),
+            ("Dish3", "Description3", 12.99, "Ingredient3", 400, "static/images/testFood.jpg", "category3"),
+        ]
+        for item in menu_items_data:
+            db_manager.create_menu_item(*item)
 
 
 def test_create_user(db_manager, app):
@@ -121,6 +128,20 @@ def test_get_all_menu_items(db_manager, app):
             assert menu_item[5] == menu_items_data[i][4]
             assert menu_item[6] == menu_items_data[i][5]
             assert menu_item[7] == menu_items_data[i][6]
+
+
+def test_get_menu_item_by_id(db_manager, app):
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        # Get second menu item in database:
+        cursor.execute("SELECT * FROM menu_items WHERE menu_item_id = ?", (2,))
+        item = cursor.fetchone()
+
+        # Get second menu item from menu_items by id:
+        menu_item = db_manager.get_menu_item_by_id(1)
+        assert menu_item == item, "Menu item by menu_item_id not retrieved!"
 
 
 def test_get_all_orders(db_manager, app):
@@ -272,12 +293,12 @@ def test_update_user_role(db_manager, app, setup_user_data):
         updated_user_role = cursor.fetchone()["role_id"]
         assert updated_user_role == 2, "User's role was not changed!"
 
-def change_needs_waiter(db_manager, app, setup_user_data):
+def test_change_needs_waiter(db_manager, app, setup_user_data):
     with app.app_context():
         db = get_db()
         cursor = db.cursor()
         # Check current Boolean for needs_waiter is False:
-        cursor.execute("Select needs_waiter FROM users WHERE user_id = ?", (1,))
+        cursor.execute("SELECT needs_waiter FROM users WHERE user_id = ?", (1,))
         user = cursor.fetchone()
         assert user is not None
         # Change needs_waiter to True:
@@ -287,6 +308,8 @@ def change_needs_waiter(db_manager, app, setup_user_data):
         cursor.execute("SELECT needs_waiter FROM users WHERE user_id = ?", (1,))
         updated_needs_waiter = cursor.fetchone()["needs_waiter"]
         assert updated_needs_waiter == True, "User's needs_waiter has not been updated!"
+
+
 
 
 
