@@ -272,6 +272,22 @@ def test_update_user_role(db_manager, app, setup_user_data):
         updated_user_role = cursor.fetchone()["role_id"]
         assert updated_user_role == 2, "User's role was not changed!"
 
+def change_needs_waiter(db_manager, app, setup_user_data):
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+        # Check current Boolean for needs_waiter is False:
+        cursor.execute("Select needs_waiter FROM users WHERE user_id = ?", (1,))
+        user = cursor.fetchone()
+        assert user is not None
+        # Change needs_waiter to True:
+        db_manager.change_needs_waiter(1)
+
+        # Verify needs_waiter has been set to True
+        cursor.execute("SELECT needs_waiter FROM users WHERE user_id = ?", (1,))
+        updated_needs_waiter = cursor.fetchone()["needs_waiter"]
+        assert updated_needs_waiter == True, "User's needs_waiter has not been updated!"
+
 
 
 
