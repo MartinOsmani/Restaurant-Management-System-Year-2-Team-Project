@@ -21,6 +21,14 @@ def db_manager(app):
         manager = DatabaseManager("database.db")
     return manager
 
+@pytest.fixture(scope="function")
+def setup_user_data(db_manager, app):
+    with app.app_context():
+        user_data = [("John Dan", "johndan", "password123", 1, "johndan@email.com"),
+                     ("Harry Potter", "harrypotter", "password321", 2, "hp@email.com")]
+        for user in user_data:
+            db_manager.create_user(*user)
+
 
 def test_create_user(db_manager, app):
     with app.app_context():
@@ -232,3 +240,22 @@ def test_update_menu_item(db_manager, app):
         assert updated_item["menu_item_calorie"] == updated_data[4]
         assert updated_item["menu_item_image_url"] == updated_data[5]
         assert updated_item["menu_item_category"] == updated_data[6]
+
+def test_delete_user(db_manager, app, setup_user_data):
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM users WHERE user_id = ?", (1,))
+        user = cursor.fetchone()
+        assert user is not None
+        # Delete user by user_id
+        db_manager.delete_user(1)
+
+        # Verify that the second user has been deleted and only one remains.
+        cursor.execute("SELECT COUNT(*) FROM users")
+        remaining_users = cursor.fetchone()[0]
+        assert remaining_users == 1, "User was not deleted"
+
+
+
+
