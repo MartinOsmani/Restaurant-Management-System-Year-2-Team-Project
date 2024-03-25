@@ -2,12 +2,12 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
     padding: 0;
-    background-color: #333;
+    background-color: #8b5858;
     color: #fff1ea;
 }
 
 h1 {
-    color: #333;
+    color: #fff;
 }
 
 .table {
@@ -24,7 +24,7 @@ h1 {
 }
 
 .table th {
-    background-color: #4CAF50;
+    background-color: #266136;
     color: white;
 }
 
