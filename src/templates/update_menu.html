@@ -47,16 +47,19 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                // Gets dropdown element by its ID
                 var dropdown = document.getElementById('menu_item');
                 dropdown.addEventListener('change', function () {
-                    var selectedMenuItemId = this.value;
+                    var selectedMenuItemId = this.value;  
                     if (selectedMenuItemId !== '') {
                         var request = new XMLHttpRequest();
+                        // Opens a GET request to retrieve menu item detials by the ID
                         request.open('GET', '/get-menu-item-details/' + selectedMenuItemId, true);
                         request.onreadystatechange = function () {
                             if (request.readyState == 4 && request.status == 200) {
                                 var menu_item_details = JSON.parse(request.responseText);
-        
+
+                                // Updates the form fields with the current menu item data
                                 document.getElementById('name').value = menu_item_details.menu_item_name;
                                 document.getElementById('description').value = menu_item_details.menu_item_description;
                                 document.getElementById('price').value = menu_item_details.menu_item_price;
@@ -64,6 +67,7 @@
                                 document.getElementById('calorie').value = menu_item_details.menu_item_calorie;
                                 document.getElementById('category').value = menu_item_details.menu_item_category;
 
+                                // Updates the image preview with the current menu item image
                                 var currentImagePreview = document.getElementById('current_image_preview');
                                 currentImagePreview.src = menu_item_details.menu_item_image_url;
         
