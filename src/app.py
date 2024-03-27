@@ -351,6 +351,17 @@ def view_order(order_id):
 @app.route('/edit-waiter-tables', methods=['GET', 'POST'])
 @login_required
 def edit_waiter_tables():
+    """
+    Route for editing tables assigned to a waiter.
+
+    If request method is POST, it will update tables assigned to the waiter
+    according to the submitted form data and then redirect to 'edit_waiter_tables'.
+    If request method is GET, it will retrieve all current tables assigned to the waiter
+    and render the 'assign_tables' template in order for waiter to be able to edit tables.
+
+    Returns:
+        Response/str: Redirects to 'edit_waiter_tables' or renders 'assign_tables.html' template.
+    """
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
 
@@ -379,12 +390,26 @@ def edit_waiter_tables():
 @app.route('/order-confirmation')
 @login_required
 def order_confirmation():
+    """
+    Renders the 'order_confirmation.html' template to confirm order has been accepted.
+
+    Returns:
+        str: The rendered 'order_confirmation.html' template.
+    """
     return render_template('order_confirmation.html')
 
 
 @app.route('/my-orders')
 @login_required
 def my_orders():
+    """
+    Retrieves all orders associated with the logged-in user ID from the database and
+    then renders the 'my_orders.html' template with the associated orders.
+
+    Returns:
+        str/Response: The rendered 'my_orders.html' template or redirects to login page if
+        not logged in.
+    """
     if 'user_id' in session:
         user_id = session['user_id']
         orders = db_manager.get_user_orders(user_id)
@@ -395,7 +420,18 @@ def my_orders():
 
 @app.route('/checkout/<int:order_id>', methods=["POST", "GET"])
 def checkout(order_id):
-    if request.method == "POST":
+    """
+    If request method is POST, it will update the order status to 'Paid' and
+    redirects to 'my_orders' page. If request method is GET, retrieves the order
+    thats associated with the order ID and renders 'checkout.html' template
+
+    Parameters:
+        order_id (int): The ID of the order to be checked out.
+
+    Returns:
+        Response/str: Redirects to 'my_orders' page or renders the 'checkout.html' template.
+    """
+    if request.method == 'POST':
         db_manager.update_order(order_id, 'The order has been Paid!')
         return redirect(url_for('my_orders'))
     else:
@@ -408,6 +444,12 @@ def checkout(order_id):
 @app.route('/calling-waiter-list')
 @login_required
 def calling_waiter():
+    """
+    Retrieves customers that require the waiter from the database.
+
+    Returns:
+        str: The rendered 'calling-waiter-list.html' template.
+    """
     customers = db_manager.get_customers_need_waiter()
 
     return render_template('calling-waiter-list.html', customers=customers)
@@ -416,6 +458,14 @@ def calling_waiter():
 @app.route('/calling-waiter-list/edit-table', methods=["POST"])
 @login_required
 def calling_waiter_edit_table():
+    """
+    Retrieves customers that require the waiter from the database. If request method
+    is POST, it will retrieve the user ID from submitted form and changes status
+    the need for the waiter for the customer.
+
+    Returns:
+        str: The rendered 'calling-waiter-list.html' template.
+    """
     customers = db_manager.get_customers_need_waiter()
 
     if request.method == "POST":
@@ -427,6 +477,16 @@ def calling_waiter_edit_table():
 @app.route('/manage-users', methods=["POST", "GET"])
 @login_required
 def manager_users():
+    """
+    Ensures that the user is a Manager then retrieves all users from the database. If
+    request method is POST, handles all operations such as deleting a user or changing
+    a user's ID. If request method is GET, renders 'manage_users.html' template so
+    the manager is able to manage the users.
+
+    Returns:
+        Response/str: JSON response indicating the result of the action of the manager or
+        the rendered 'manage_users.html' template.
+    """
     user_id = session.get('user_id')
 
     role_id = db_manager.get_role_id(user_id)
@@ -458,13 +518,21 @@ def manager_users():
 
     return render_template('manage_users.html', users=users)
 
-# Route to view order times as kitchen staff
+
 @app.route('/view-order-times')
 @login_required
 def view_order_times():
-    # Retrieves all orders from the database
+    """
+    Route for viewing order times as kitchen staff.
+
+    Retrieves all orders from the database and renders the 'order_times.html' template
+    with the retrieved orders.
+
+    Returns:
+        str: The rendered 'order_times.html' template.
+    """
     orders = db_manager.get_all_orders()
-    # Renders the order times template with the retrieved orders from the database
+    
     return render_template('order_times.html', orders=orders)
 
 if __name__ == '__main__':
