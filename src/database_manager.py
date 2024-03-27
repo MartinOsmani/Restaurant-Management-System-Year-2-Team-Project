@@ -293,9 +293,17 @@ class DatabaseManager:
         """
             Inserts predefined test data for menu items into the database.
         """
-        self.create_menu_item("Cheesy Fries", "Fries with cheese melted on top.", 6.99, "Potatoes, Mozeralla Cheese", 500, "static/images/testFood.jpg", "starter")
-        self.create_menu_item("Curly Fries", "Potatoes sliced with a curly fry clutter.", 5.99, "Potatoes", 400, "static/images/testFood.jpg", "main")
-        self.create_menu_item("Standard Cut Fries", "Potatoes evenly cut medium-thin.", 3.99, "Potatoes", 200, "static/images/testFood.jpg", "drink")
+        self.create_menu_item("Crispy Fried Mozzarella", "Melted cheese in golden breadcrumbs", 6.99, "Fresh Mozzarella Balls, Flour, Eggs, Bread crumbs, Garlic Powder, Onion Powder, Italian herbs, Salt",
+                               600, "static/images/mozzarella.jpeg", "starter")
+        self.create_menu_item("Garlic Bread", "Pizza dough baked with garlic and mixed herbs", 5.99, "Bread, Butter, Olive Oil, Garlic, Garlic Powder, Parsley, Salt",
+                               350, "static/images/garlic_bread.jpeg", "starter")
+        self.create_menu_item("Spaghetti Bolognese", "Spaghetti topped with braised beef and red wine ragu", 12.99,
+                               "Olive Oil, Onion, Minced Beef, Red Wine, Tamato Puree, Worcestershire Sauce, Salt, Spaghetti", 900, "static/images/spaghetti.jpeg", "main")
+        self.create_menu_item("Pepperoni Pizza", "Tamato sauce, mozzarella with a covering of pepperoni", 14.99, 
+                              "Pizza Dough, Tomato Sauce, Pepperoni, Mozzarella Cheese, Black Pepper, Flour, Olive Oil", 1250, "static/images/pepperoni.jpeg", "main")
+        self.create_menu_item("Strawberry Lemonade", "Lemonade with a touch of sweet strawberry", 4.99, "Strawberries, Lemons, Sugar, Water", 150, "static/images/lemonade.jpeg", "drink")
+        self.create_menu_item("Citrus Cooler", "Tangy and refreshing, made with 7up and peach", 4.99, "Grapefruit, Orange, Lime, Ginger Ale, Peach, 7up", 100, "static/images/citrus.jpeg", "drink")
+        
 
     def update_menu_item(self, menu_item_id, name, description, price, ingredients, calorie, image_url, category):
         """
