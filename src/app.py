@@ -98,7 +98,8 @@ def show_orders():
     is a customer, it redirects them to the '/my-orders' page.
 
     Returns:
-        str: The rendered HTML content of the orders page as staff or a redirects to page to view their orders as a customer.
+        str/Response: The rendered HTML content of the orders page as staff or a redirects to page 
+        to view their orders as a customer.
     """
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
@@ -111,7 +112,7 @@ def show_orders():
 @app.route('/update-status/<int:order_id>', methods=['POST'])
 def update_order_status(order_id):
     """
-    Updates the status of a specific order.
+    Updates the status of a specific order as a waiter.
 
     Parameters:
         order_id (int): The ID of the order to be updated.
@@ -140,10 +141,20 @@ def delete_order(order_id):
     db_manager.delete_order(order_id)
     return redirect(url_for('show_orders'))
 
-# Route for updating menu items
 @app.route('/update-menu', methods=['GET', 'POST'])
 @login_required
 def update_menu():
+    """
+    Route for updating menu items.
+
+    Retrieves all menu items from the database. If request method is POST, it retrieves 
+    all the data from the form submitted and updates the database accordingly.
+    Then, renders the 'menu.html' template. If the request method is GET,
+    it renders the 'update_menu.html' template.
+
+    Returns:
+        str: The rendered 'menu.html' or 'update_menu.html' template.
+    """
     menu_items = db_manager.get_all_menu_items()
     if request.method == 'POST':
         # Retrieves the data from the form
@@ -184,18 +195,37 @@ def update_menu():
 
     return render_template('update_menu.html', menu_items=menu_items)
 
-# Route for retrieving the specific menu item by its ID
 @app.route('/get-menu-item-details/<int:menu_item_id>', methods=['GET'])
 def get_menu_item_details(menu_item_id):
+    """
+    Retrieves details of a specific menu item by its ID.
+
+    Parameters:
+        menu_item_id (int): The ID of the menu item to retrieve details for.
+
+    Returns:
+        Response: JSON response containing details of the menu item.
+    """
     # Retrieves the data of the menu item from the database based on its ID
     menu_item_details = db_manager.get_menu_item_by_id(menu_item_id)
     # Returns it in JSON format
     return jsonify(menu_item_details)
 
-# Route for creating menu items
 @app.route('/create-menu-item', methods=['GET', 'POST'])
 @login_required
 def create_menu_item():
+    """
+    Route for creating menu items.
+
+    If the request method is POST, it retrieves data from the form submitted and creates
+    the menu item in the database. Then it redirects the user to the menu page
+    to view the updated menu. If the request method is GET, it renders the 'create_menu_item.html'
+    template to allow the user to create a new menu item.
+
+    Returns:
+        Response/str: Redirects the user to the 'menu' page or renders the 'create_menu_item.html' 
+        template.
+    """
     if request.method == 'POST':
         # Retrieves the data from the form
         name = request.form.get('name')
@@ -228,6 +258,12 @@ def create_menu_item():
 @app.route('/view-tables', methods=['GET', 'POST'])
 @login_required
 def view_tables():
+    """
+    Route to view assigned tables and their corresponding orders as a waiter.
+
+    Returns:
+        str: The rendered 'waiter-tables.html' template.
+    """
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
     if role_id != 2:
@@ -247,6 +283,16 @@ def view_tables():
 @app.route('/create-order', methods=['POST'])
 @login_required
 def create_order():
+    """
+    Route for creating a new order.
+
+    Creates a new order based on the JSON payload. Processes the table number, order items, 
+    calculates the total price, and saves the order to the database. 
+    Returns a JSON response with the success or failure of the order creation.
+
+    Returns:
+        Response: JSON response indicating the success or failure of the order creation.
+    """
     payload = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -284,6 +330,17 @@ def create_order():
 @app.route('/order-items/<int:order_id>')
 @login_required
 def view_order(order_id):
+    """
+    Retrieves the order items that are associated with the order ID from the database.
+    Then it renders the 'view-order.html' template with the retrieved items and the order ID.
+
+    Parameters:
+        order_id (int): The ID of the order to view its items.
+
+    Returns:
+        str/Response: The rendered HTML of the 'view-order.html' template or redirects to
+        login page if not logged in.
+    """
     if 'user_id' in session:
         items = db_manager.get_order_items(order_id)
         return render_template('view-order.html', items=items, order_id=order_id)
