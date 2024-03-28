@@ -398,11 +398,11 @@ class DatabaseManager:
                 """
                 Retrieve details of a menu item based on its menu item ID.
 
-                Parameters:
-                    menu_item_id (int): The ID of the menu item to retrieve details for.
+                    Parameters:
+                        menu_item_id (int): The ID of the menu item to retrieve details for.
 
-                Returns:
-                    dict or None: A dictionary containing details of the menu item, or None if the menu item is not found.
+                    Returns:
+                        dict or None: A dictionary containing details of the menu item, or None if the menu item is not found.
                 """
                 db = get_db()
                 cursor = db.execute(
@@ -430,11 +430,11 @@ class DatabaseManager:
         """
         Retrieves all orders associated with a specific table number.
 
-        Parameters:
-            table_number (int): The table number.
+            Parameters:
+                table_number (int): The table number.
 
-        Returns:
-            list of sqlite3.Row: A list of all orders for the specified table.
+            Returns:
+                list of sqlite3.Row: A list of all orders for the specified table.
         """
         db = get_db()
         cursor = db.cursor()
@@ -446,12 +446,12 @@ class DatabaseManager:
         """
         Retrieves all orders associated with the tables assigned to a specific waiter.
 
-        Parameters:
-            user_id (int): The user ID of the waiter.
+            Parameters:
+                user_id (int): The user ID of the waiter.
 
-        Returns:
-            list: A list of all orders for the tables assigned to the waiter. Each order
-            is represented as a dictionary including the order details.
+            Returns:
+                list: A list of all orders for the tables assigned to the waiter. Each order
+                is represented as a dictionary including the order details.
         """
         assigned_tables = self.get_assigned_tables(user_id)
         all_orders = []
@@ -513,11 +513,11 @@ class DatabaseManager:
         """
         Encodes a set of table numbers into a bitmask.
 
-        Parameters:
-            input (set of int): A set of table numbers to encode.
+            Parameters:
+                input (set of int): A set of table numbers to encode.
 
-        Returns:
-            int: A bitmask representing the set of table numbers.
+            Returns:
+                int: A bitmask representing the set of table numbers.
 
         """
         bitmask = 0

@@ -37,8 +37,8 @@ def index():
     determines the template to render based on the role_id. Otherwise, 
     renders the default home template.
     
-    Returns:
-        str: The rendered index template.
+        Returns:
+            str: The rendered index template.
     """
     if 'user_id' in session:
         user_id = session['user_id']
@@ -54,12 +54,12 @@ def index():
 
 @app.route('/menu')
 def menu():
-    """"
+    """
     Retrieves all menu items from the database and checks to see if a user is logged in
     by checking if 'user_id' is in the session and then renders the menu page.
 
-    Returns:
-        str: The rendered menu template.
+        Returns:
+            str: The rendered menu template.
     """
     menu_items = db_manager.get_all_menu_items()
     is_logged_in = 'user_id' in session
@@ -73,8 +73,8 @@ def call_waiter():
     based on the user's role_id. If the user is not logged in, it renders the 
     default 'home.html' template.
 
-    Returns:
-        str: The rendered HTML template.
+        Returns:
+            str: The rendered HTML template.
     """
 
     user_id = session.get('user_id')
@@ -97,9 +97,9 @@ def show_orders():
     all orders from the database and renders them using the 'orders.html' template. If the user
     is a customer, it redirects them to the '/my-orders' page.
 
-    Returns:
-        str/Response: The rendered HTML content of the orders page as staff or a redirects to page 
-        to view their orders as a customer.
+        Returns:
+            str/Response: The rendered HTML content of the orders page as staff or a redirects to page
+            to view their orders as a customer.
     """
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
@@ -114,11 +114,11 @@ def update_order_status(order_id):
     """
     Updates the status of a specific order as a waiter.
 
-    Parameters:
-        order_id (int): The ID of the order to be updated.
+        Parameters:
+            order_id (int): The ID of the order to be updated.
 
-    Returns:
-        Response: Redirects the user to 'show_orders' after updating the order status.
+        Returns:
+            Response: Redirects the user to 'show_orders' after updating the order status.
     """
     new_status = request.form['status']
     db_manager.update_order(order_id, new_status)
@@ -132,11 +132,11 @@ def delete_order(order_id):
     """
     Deletes an order by its ID and redirects to the orders page.
 
-    Parameters:
-        order_id (int): The ID of the order to be deleted.
+        Parameters:
+            order_id (int): The ID of the order to be deleted.
 
-    Returns:
-        Response: Redirects the user to 'show_orders' after deleting the order.
+        Returns:
+            Response: Redirects the user to 'show_orders' after deleting the order.
     """
     db_manager.delete_order(order_id)
     return redirect(url_for('show_orders'))
@@ -152,8 +152,8 @@ def update_menu():
     Then, renders the 'menu.html' template. If the request method is GET,
     it renders the 'update_menu.html' template.
 
-    Returns:
-        str: The rendered 'menu.html' or 'update_menu.html' template.
+        Returns:
+            str: The rendered 'menu.html' or 'update_menu.html' template.
     """
     menu_items = db_manager.get_all_menu_items()
     if request.method == 'POST':
@@ -200,11 +200,11 @@ def get_menu_item_details(menu_item_id):
     """
     Retrieves details of a specific menu item by its ID.
 
-    Parameters:
-        menu_item_id (int): The ID of the menu item to retrieve details for.
+        Parameters:
+            menu_item_id (int): The ID of the menu item to retrieve details for.
 
-    Returns:
-        Response: JSON response containing details of the menu item.
+        Returns:
+            Response: JSON response containing details of the menu item.
     """
     # Retrieves the data of the menu item from the database based on its ID
     menu_item_details = db_manager.get_menu_item_by_id(menu_item_id)
@@ -222,9 +222,9 @@ def create_menu_item():
     to view the updated menu. If the request method is GET, it renders the 'create_menu_item.html'
     template to allow the user to create a new menu item.
 
-    Returns:
-        Response/str: Redirects the user to the 'menu' page or renders the 'create_menu_item.html' 
-        template.
+        Returns:
+            Response/str: Redirects the user to the 'menu' page or renders the 'create_menu_item.html'
+            template.
     """
     if request.method == 'POST':
         # Retrieves the data from the form
@@ -261,8 +261,8 @@ def view_tables():
     """
     Route to view assigned tables and their corresponding orders as a waiter.
 
-    Returns:
-        str: The rendered 'waiter-tables.html' template.
+        Returns:
+            str: The rendered 'waiter-tables.html' template.
     """
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
@@ -290,8 +290,8 @@ def create_order():
     calculates the total price, and saves the order to the database. 
     Returns a JSON response with the success or failure of the order creation.
 
-    Returns:
-        Response: JSON response indicating the success or failure of the order creation.
+        Returns:
+            Response: JSON response indicating the success or failure of the order creation.
     """
     payload = request.get_json()
     current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -334,12 +334,12 @@ def view_order(order_id):
     Retrieves the order items that are associated with the order ID from the database.
     Then it renders the 'view-order.html' template with the retrieved items and the order ID.
 
-    Parameters:
-        order_id (int): The ID of the order to view its items.
+        Parameters:
+            order_id (int): The ID of the order to view its items.
 
-    Returns:
-        str/Response: The rendered HTML of the 'view-order.html' template or redirects to
-        login page if not logged in.
+        Returns:
+            str/Response: The rendered HTML of the 'view-order.html' template or redirects to
+            login page if not logged in.
     """
     if 'user_id' in session:
         items = db_manager.get_order_items(order_id)
@@ -359,8 +359,8 @@ def edit_waiter_tables():
     If request method is GET, it will retrieve all current tables assigned to the waiter
     and render the 'assign_tables' template in order for waiter to be able to edit tables.
 
-    Returns:
-        Response/str: Redirects to 'edit_waiter_tables' or renders 'assign_tables.html' template.
+        Returns:
+            Response/str: Redirects to 'edit_waiter_tables' or renders 'assign_tables.html' template.
     """
     user_id = session.get('user_id')
     role_id = db_manager.get_role_id(user_id)
@@ -393,8 +393,8 @@ def order_confirmation():
     """
     Renders the 'order_confirmation.html' template to confirm order has been accepted.
 
-    Returns:
-        str: The rendered 'order_confirmation.html' template.
+        Returns:
+            str: The rendered 'order_confirmation.html' template.
     """
     return render_template('order_confirmation.html')
 
@@ -406,9 +406,9 @@ def my_orders():
     Retrieves all orders associated with the logged-in user ID from the database and
     then renders the 'my_orders.html' template with the associated orders.
 
-    Returns:
-        str/Response: The rendered 'my_orders.html' template or redirects to login page if
-        not logged in.
+        Returns:
+            str/Response: The rendered 'my_orders.html' template or redirects to login page if
+            not logged in.
     """
     if 'user_id' in session:
         user_id = session['user_id']
@@ -425,11 +425,11 @@ def checkout(order_id):
     redirects to 'my_orders' page. If request method is GET, retrieves the order
     thats associated with the order ID and renders 'checkout.html' template
 
-    Parameters:
-        order_id (int): The ID of the order to be checked out.
+        Parameters:
+            order_id (int): The ID of the order to be checked out.
 
-    Returns:
-        Response/str: Redirects to 'my_orders' page or renders the 'checkout.html' template.
+        Returns:
+            Response/str: Redirects to 'my_orders' page or renders the 'checkout.html' template.
     """
     if request.method == 'POST':
         db_manager.update_order(order_id, 'The order has been Paid!')
@@ -447,8 +447,8 @@ def calling_waiter():
     """
     Retrieves customers that require the waiter from the database.
 
-    Returns:
-        str: The rendered 'calling-waiter-list.html' template.
+        Returns:
+            str: The rendered 'calling-waiter-list.html' template.
     """
     customers = db_manager.get_customers_need_waiter()
 
@@ -463,8 +463,8 @@ def calling_waiter_edit_table():
     is POST, it will retrieve the user ID from submitted form and changes status
     the need for the waiter for the customer.
 
-    Returns:
-        str: The rendered 'calling-waiter-list.html' template.
+        Returns:
+            str: The rendered 'calling-waiter-list.html' template.
     """
     customers = db_manager.get_customers_need_waiter()
 
@@ -483,9 +483,9 @@ def manager_users():
     a user's ID. If request method is GET, renders 'manage_users.html' template so
     the manager is able to manage the users.
 
-    Returns:
-        Response/str: JSON response indicating the result of the action of the manager or
-        the rendered 'manage_users.html' template.
+        Returns:
+            Response/str: JSON response indicating the result of the action of the manager or
+            the rendered 'manage_users.html' template.
     """
     user_id = session.get('user_id')
 
@@ -528,8 +528,8 @@ def view_order_times():
     Retrieves all orders from the database and renders the 'order_times.html' template
     with the retrieved orders.
 
-    Returns:
-        str: The rendered 'order_times.html' template.
+        Returns:
+            str: The rendered 'order_times.html' template.
     """
     orders = db_manager.get_all_orders()
     
