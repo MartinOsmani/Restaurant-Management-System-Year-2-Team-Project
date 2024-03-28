@@ -1,7 +1,7 @@
 body {
     font-family: 'Montserrat', sans-serif;
-    color: #fdf6e3;
-    background-color: #333;
+    color: #333;
+    background-color: #8b5858;
     padding: 20px;
 }
 
@@ -27,6 +27,6 @@ body {
 }
 
 .btn:hover, .btn:focus {
-    background-color: #ff6600;
+    background-color: #266136;
     color: #333;
 }
