@@ -379,6 +379,13 @@ class DatabaseManager:
 
     @staticmethod
     def get_customers_need_waiter():
+        """
+        Retrieves a list of customers who have indicated that they need a waiter.
+
+            Returns:
+                list of sqlite3.Row: A list of rows where each row contains the user_id, name, and table_number for a customer who needs a waiter.
+
+        """
         db = get_db()
         cursor = db.cursor()
         cursor.execute('SELECT users.user_id, users.name, orders.table_number FROM users, orders WHERE needs_waiter=TRUE')
@@ -467,6 +474,16 @@ class DatabaseManager:
 
     @staticmethod
     def get_waiter_tables(user_id):
+        """
+        Retrieves the table assignments for a waiter encoded as a bitmask.
+
+            Parameters:
+                user_id (int): The ID of the waiter whose table assignments are to be retrieved.
+
+            Returns:
+                int: A bitmask representing the waiter's table assignments.
+
+        """
         db = get_db()
         cursor = db.cursor()
         cursor.execute("SELECT tables_assigned FROM users WHERE user_id = ?",(user_id,))
@@ -475,6 +492,16 @@ class DatabaseManager:
 
     @staticmethod
     def decode_bitmask(bitmask):
+        """
+        Decodes a bitmask into a set of table numbers.
+
+            Parameters:
+                bitmask (int): A bitmask representing a set of table numbers.
+
+            Returns:
+                set of int: The set of table numbers encoded by the bitmask.
+
+        """
         result = set()
         for table_number in range(1, 21):  # MODIFY THIS TO CHANGE THE NUMBER OF TABLES
             if bitmask & (1 << (table_number - 1)):
@@ -483,6 +510,16 @@ class DatabaseManager:
 
     @staticmethod
     def encode_bitmask(input):
+        """
+        Encodes a set of table numbers into a bitmask.
+
+        Parameters:
+            input (set of int): A set of table numbers to encode.
+
+        Returns:
+            int: A bitmask representing the set of table numbers.
+
+        """
         bitmask = 0
         for bits in input:
             bitmask |= 1 << (bits - 1)
@@ -490,6 +527,14 @@ class DatabaseManager:
 
     # WARNING MAKE SURE YOU DO CHECKS BEFORE USING THIS
     def add_waiter_tables(self, user_id, assignments):
+        """
+        Adds table assignments to a waiter based on a list of table numbers.
+
+            Parameters:
+                user_id (int): The ID of the waiter to whom tables are being added.
+                assignments (set of int): A set containing the table numbers to add to the waiter's assignments.
+
+        """
 
         bitmask = self.get_waiter_tables(user_id)
 
@@ -506,6 +551,14 @@ class DatabaseManager:
 
 
     def remove_waiter_tables(self, user_id, removals):
+        """
+        Removes table assignments from a waiter based on a list of table numbers.
+
+            Parameters:
+                user_id (int): The ID of the waiter from whom the tables are being removed.
+                removals (set of int): A set containing the table numbers to remove from the waiter's assignments.
+
+        """
 
         bitmask = self.get_waiter_tables(user_id)
 
